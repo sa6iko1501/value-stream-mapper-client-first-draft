@@ -1,0 +1,23 @@
+:root {
+  --color-primary: #1a237e;       /* Dark blue */
+  --color-secondary: #ffd700;     /* Gold/Yellow */
+  --color-text: #ffffff;           /* White */
+  --color-text-dark: #1a237e;      /* Dark blue for text */
+  --color-secondary-dark: #11164b;
+  --color-hover: #2a3fc7;          /* Lighter blue */
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --border-radius: 4px;
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --transition: all 0.3s ease;
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #1a237e;
+}
