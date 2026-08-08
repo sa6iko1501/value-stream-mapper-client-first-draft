@@ -1,0 +1,21 @@
+{
+    "nav-bar": {
+        "dashboards-label": "Dasboards",
+        "vs-maps-label": "VS Maps",
+        "language-label": "Language"
+    },
+    "home-screen": {
+        "hello-label": "Hello",
+        "message": "We make Value-Stream mapping easy and accessible"
+    },
+    "footer": {
+        "author": "Aleksandar Stoyanov",
+        "git-message": "Check more projects"
+    },
+    "dashboards": {
+        "greeting": "This is the Dashboards page"
+    },
+    "vs-maps": {
+        "greeting": "This is the VS Maps page"
+    }
+}

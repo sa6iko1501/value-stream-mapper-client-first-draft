@@ -1,0 +1,21 @@
+{
+    "nav-bar": {
+        "dashboards-label": "Табла за управление",
+        "vs-maps-label": "VS Карти",
+        "language-label": "Език"
+    },
+    "home-screen": {
+        "hello-label": "Привет",
+        "message": "Правим Value-Stream процеса лесен и достъпен"
+    },
+    "footer": {
+        "author": "Александър Стоянов",
+        "git-message": "Още проекти"
+    },
+    "dashboards": {
+        "greeting": "Това е страницата с таблата за управление"
+    },
+    "vs-maps": {
+        "greeting": "Това е страницата с Value-Stream картите"
+    }
+}

@@ -4,6 +4,7 @@ import DashBoards from './pages/Dashboards';
 import VSMaps from './pages/VSMaps'
 import NavBar from './reusable-components/navbar/NavBar';
 import BasicLayout from './BasicLayout';
+import './i18n.js';  
 
 function App() {
   return <>

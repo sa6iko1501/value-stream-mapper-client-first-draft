@@ -1,10 +1,13 @@
 import NavBar from "../reusable-components/navbar/NavBar";
 import './VSMaps.css'
+import { useTranslation } from "react-i18next";
 
 function VSMaps() {
+    const {t} = useTranslation();
+
     return (
         <div className="value-stream-maps">
-            <p>This is the Value-Stream Maps page!</p>
+            <p>{`${t("vs-maps.greeting")}`}</p>
         </div>
     );
 }

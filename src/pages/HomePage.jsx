@@ -1,11 +1,15 @@
 import './HomePage.css'
+import { useTranslation } from 'react-i18next';
 
 function HomePage() {
+    const {t} = useTranslation();
+
     return (
         <div className="home-page">
-            <h1>Welcome Home Page!</h1>
+            <h1>{`${t("home-screen.hello-label")}!`}</h1>
+
             <img src="src\assets\FullLogo_Transparent.png"></img>
-            <p>Making Value-Stream mapping easy and accessible!</p>
+            <p>{`${t("home-screen.message")}!`}</p>
         </div>
     );
 }
