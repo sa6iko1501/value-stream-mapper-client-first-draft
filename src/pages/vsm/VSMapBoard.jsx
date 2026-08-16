@@ -101,7 +101,7 @@ function VSMapBoard(props){
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
             >
-                <Background color="#beaadd" bgColor="#FFFFFF" size="5" variant={BackgroundVariant.Cross}/>
+                <Background color="#beaadd" bgColor="#FFFFFF" size="2" variant={BackgroundVariant.Dots}/>
                 <Controls />
                 <MiniMap />
             </ReactFlow>
