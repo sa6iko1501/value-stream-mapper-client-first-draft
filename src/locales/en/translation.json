@@ -16,6 +16,8 @@
         "greeting": "This is the Dashboards page"
     },
     "vs-maps": {
-        "greeting": "This is the VS Maps page"
+        "greeting": "This is the VS Maps page",
+        "title": "Name",
+        "date": "Date"
     }
 }

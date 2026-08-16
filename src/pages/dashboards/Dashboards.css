@@ -1,5 +1,9 @@
-.value-stream-maps {
-  min-height: calc(100vh - 135px);; /* Subtract navbar and footer height */
+/* HomePage.css - Matching Theme with NavBar.css */
+
+
+/* ===== Base Layout ===== */
+.dashboards {
+  min-height: calc(100vh - 9.5rem); /* Subtract navbar height */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -10,10 +14,13 @@
   color: var(--color-text);
 }
 
-.value-stream-maps p {
+
+.dashboards p {
   font-size: 1.25rem;
   line-height: 1.6;
   max-width: 600px;
   margin: var(--spacing-md) auto 0;
   color: var(--color-text-secondary);
 }
+
+

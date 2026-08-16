@@ -1,4 +1,4 @@
-import NavBar from "../reusable-components/navbar/NavBar";
+import NavBar from "../../reusable-components/navbar/NavBar";
 import './Dashboards.css'
 import { useTranslation } from 'react-i18next';
 

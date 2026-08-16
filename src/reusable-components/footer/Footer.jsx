@@ -6,8 +6,12 @@ function Footer() {
 
     return (
         <div className="footer">
-            <p>Value-Stream Mapper</p>
-            <p>{t("footer.author")}</p>
+            <div className='vsm-title'>
+                <p >Value-Stream Mapper</p>
+            </div>
+            <div className='author-text'>
+                <p>{t("footer.author")}</p>
+            </div>
             <div className='github-info-container'>
                 <a href="https://github.com/sa6iko1501" target="_blank">
                     <img src="src\assets\github-logo.png"></img>

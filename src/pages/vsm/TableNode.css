@@ -1,0 +1,142 @@
+/* TableNode.css */
+
+.table-node {
+    min-width: 180px;
+    max-width: 320px;
+    background: #ffffff;
+    border: 1px solid #d9dee7;
+    border-radius: 7px;
+    overflow: visible;
+    box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.08),
+        0 6px 16px rgba(0, 0, 0, 0.06);
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    transition:
+        box-shadow 0.15s ease,
+        transform 0.15s ease;
+}
+
+/* Slight lift when the node is hovered */
+.table-node:hover {
+    box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.1),
+        0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================
+   Title
+   ========================= */
+
+.table-node-title {
+    display: block;
+    padding: 8px 12px;
+
+    background: var(--color-primary, #e8f0fe);
+    color: var(--color-text, #1f2937);
+
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.2;
+
+    text-align: center;
+
+    border-bottom: 1px solid
+        var(--color-primary-border, #cbd8ee);
+}
+
+
+/* =========================
+   Table
+   ========================= */
+
+.table-node-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    font-size: 0.8rem;
+    color: #374151;
+}
+
+
+/* Cells */
+
+.table-node-table td {
+    padding: 6px 9px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    line-height: 1.25;
+    white-space: nowrap;
+}
+
+/* Remove bottom border from last row */
+
+.table-node-table tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* First column */
+
+.table-node-table td:first-child {
+    text-align: left;
+    font-weight: 500;
+    color: #4b5563;
+}
+
+
+/* Second column */
+
+.table-node-table td:last-child {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: #111827;
+}
+
+
+/* =========================
+   Excel-like rows
+   ========================= */
+
+.table-node-table tr:nth-child(even) td {
+    background-color: #f8fafc;
+}
+
+.table-node-table tr:hover td {
+    background-color: #eef3f8;
+}
+
+
+/* =========================
+   React Flow handles
+   ========================= */
+
+.table-node .react-flow__handle {
+    width: 9px;
+    height: 9px;
+
+    background: #ffffff;
+    border: 2px solid var(--color-primary, #6b8fd6);
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+
+    transition:
+        background-color 0.15s ease,
+        transform 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.table-node .react-flow__handle:hover {
+    background: var(--color-primary, #6b8fd6);
+    border-color: var(--color-primary, #6b8fd6);
+    transform: scale(1.2);
+}

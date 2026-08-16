@@ -1,0 +1,11 @@
+.vs-map {
+  min-height: calc(100vh - 9.5rem); /* Subtract navbar height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-xl) var(--spacing-md);
+  text-align: center;
+  background-color: var(--color-primary);
+  color: var(--color-text);
+}
