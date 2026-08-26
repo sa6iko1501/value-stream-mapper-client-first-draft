@@ -1,0 +1,82 @@
+.work-panel {
+  width: 25%;
+  height: 100%;
+  flex-shrink: 0;
+  background-color: var(----color-secondary-dark);
+  border: 1px solid white;
+  padding: var(--spacing-md);
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.work-panel-title {
+  color: var(--color-secondary);
+  margin: 0 0 var(--spacing-md);
+  text-align: center;
+}
+
+.work-panel-section {
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background-color: #f9f9f9;
+  border-radius: var(--border-radius);
+  border: 1px solid #eee;
+}
+
+.work-panel-section h3 {
+  color: var(--color-primary);
+  margin: 0 0 var(--spacing-sm);
+  font-size: 1rem;
+  padding-bottom: var(--spacing-xs);
+  border-bottom: 1px solid #eee;
+}
+
+.work-panel-option {
+    display: flex;
+    align-items: center;
+}
+
+.work-panel-option label {
+    color: var(--color-primary);
+    flex: 1;
+}
+
+.work-panel-option button {
+    margin-left: auto;
+    display: block;
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.9rem;
+}
+
+.work-panel-option button:hover {
+    background-color: var(--color-hover);
+}
+
+.work-panel-button {
+  display: block;
+  width: 40%;
+  margin: 0.5rem;
+  padding: var(--spacing-sm) var(--spacing-md);
+  margin-top: var(--spacing-sm);
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.9rem;
+}
+
+
+.work-panel-button:hover {
+  background-color: var(--color-hover);
+}
+
+.work-panel-button+.work-panel-button {
+  margin-top: var(--spacing-xs);
+}

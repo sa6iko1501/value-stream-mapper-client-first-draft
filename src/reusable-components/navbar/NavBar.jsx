@@ -5,17 +5,23 @@ import { changeLanguage } from 'i18next';
 import { useEffect, useState } from 'react';
 
 function NavBar() {
-    const [activeLanguage, setActiveLanguage] = useState({ code: "en", label: "En" });
+    const languageCodes = [
+        { code: "en", label: "En" },
+        { code: "bg", label: "Бг" }
+    ]
+    const [activeLanguage, setActiveLanguage] = useState(() => {
+
+        const savedLanguage = localStorage.getItem("language");
+
+        return languageCodes.find(
+            language => language.code === savedLanguage
+        ) || languageCodes[0];
+    });
     const { t } = useTranslation();
 
     const renderLanguage = useEffect(() => {
         changeLanguage(activeLanguage.code)
     }, [activeLanguage])
-
-    const languageCodes = [
-        { code: "en", label: "En" },
-        { code: "bg", label: "Бг" }
-    ]
 
     const handleChangeLanguage = () => {
         if (activeLanguage.code === "en") {
@@ -25,6 +31,11 @@ function NavBar() {
             setActiveLanguage(activeLanguage => languageCodes.filter(x => x.code === "en").at(0))
         }
     }
+
+    useEffect(() => {
+        changeLanguage(activeLanguage.code);
+        localStorage.setItem("language", activeLanguage.code);
+    }, [activeLanguage]);
 
     return (
         <nav className="navbar">

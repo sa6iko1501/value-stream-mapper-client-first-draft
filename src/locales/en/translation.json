@@ -19,5 +19,28 @@
         "greeting": "This is the VS Maps page",
         "title": "Name",
         "date": "Date"
+    },
+    "edit-process-table": {
+        "title": "Edit process table",
+        "save": "Save",
+        "add-row": "Add row",
+        "cancel": "Cancel"
+    },
+    "work-panel":{
+        "title": "Work Panel",
+        "process-tables-label": "Process Tables",
+        "modify-label": "Modify"
+    },
+    "units": {
+        "second": "sec",
+        "hour": "h",
+        "kg": "kg",
+        "piece": "pcs",
+        "pallet": "pallets",
+        "day": "days",
+        "cart": "carts"
+    },
+    "common": {
+        "loading": "Loading..."
     }
 }

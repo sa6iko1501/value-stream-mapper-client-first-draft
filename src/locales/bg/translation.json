@@ -19,5 +19,28 @@
         "greeting": "Това е страницата с Value-Stream картите",
         "title": "Заглавие",
         "date": "Дата"
+    },
+        "edit-process-table": {
+        "title": "Промяна на таблица с процес",
+        "save": "Запази",
+        "add-row": "Добави ред",
+        "cancel": "Отказване"
+    },
+       "work-panel":{
+        "title": "Работен Панел",
+        "process-tables-label": "Таблици с процеси",
+        "modify-label": "Промени"
+    },
+    "units": {
+        "second": "сек",
+        "hour": "ч",
+        "kg": "кг",
+        "piece": "детайли",
+        "pallet": "палети",
+        "day": "дни",
+        "cart": "колички"
+    },
+    "common": {
+        "loading": "Зареждане..."
     }
 }

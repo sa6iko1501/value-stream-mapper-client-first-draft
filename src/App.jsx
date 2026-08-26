@@ -6,6 +6,7 @@ import VSMapBoard from './pages/vsm/VSMapBoard.jsx';
 import NavBar from './reusable-components/navbar/NavBar';
 import BasicLayout from './BasicLayout';
 import './i18n.js';  
+import ProcessTableForm from './pages/vsm/forms/ProcessTableForm.jsx';
 
 function App() {
   return <>
@@ -16,6 +17,7 @@ function App() {
           <Route path="/dashboards" element={<DashBoards />} />
           <Route path="/value-stream-maps" element={<VSMaps />} />
           <Route path="/vs-map/:id" element={<VSMapBoard />} />
+          <Route path="/edit-process-table/:id" element={<ProcessTableForm />} />
         </Route>
       </Routes>
     </HashRouter>

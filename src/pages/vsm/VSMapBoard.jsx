@@ -9,25 +9,30 @@ import SupplyNode from './nodes/supply/SupplyNode';
 import CustomerNode from './nodes/customer/CustomerNode';
 import InventoryNode from './nodes/inventory/InventoryNode';
 import TruckNode from './nodes/TruckNode';
+import { useTranslation } from "react-i18next";
+import WorkPanel from './work-panel/WorkPanel';
 
 function VSMapBoard(props) {
     const { id } = useParams();
+    const { t } = useTranslation();
     const [vsMap, setVsMap] = useState();
     const [title, setTitle] = useState();
     const [nodes, setNodes] = useState([]);
     const [edges, setEdges] = useState([]);
+    const [pTables, setpTables] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await Axios.get(`http://localhost:8080/vsm/${id}`);
                 setVsMap(vsMap => response.data?.value_stream_map);
-                const processTables = response.data?.value_stream_map?.process_tables || {};
+                const processTables = response.data?.value_stream_map?.process_tables ?? [];
                 const supply = response.data?.value_stream_map?.supply;
                 const customer_output = response.data?.value_stream_map.customer_output;
                 const TABLE_NODE_DISTANCE = 400;
                 const TRUCK_NODE_Y = 400;
                 setTitle(title => response.data?.value_stream_map?.title)
+                console.log(processTables);
                 // Transform processTables into nodes
                 const tableNodes = Object.entries(processTables).map(([key, table], index) => ({
                     id: table.id || key,
@@ -38,10 +43,12 @@ function VSMapBoard(props) {
                         items: table.rows?.map(row => ({
                             name: row.row_name,
                             value: row.value,
-                            unit: row.unit
+                            unit: getUnitDisplayName(row.unit.unit_type)
                         }))
                     }
                 }));
+
+                setpTables(processTables);
 
                 const MAGIC_NUMBER = 125;
 
@@ -92,16 +99,14 @@ function VSMapBoard(props) {
                 truckNodes.push(supplyTruck);
 
                 const customerTruck = {
-                    id: `${tableNodes.at(tableNodes.length -1).id}:truck`,
+                    id: `${tableNodes.at(tableNodes.length - 1).id}:truck`,
                     type: 'truck',
-                    position:{
-                        x: tableNodes.at(tableNodes.length -1).position.x + TABLE_NODE_DISTANCE - MAGIC_NUMBER,
+                    position: {
+                        x: tableNodes.at(tableNodes.length - 1).position.x + TABLE_NODE_DISTANCE - MAGIC_NUMBER,
                         y: TRUCK_NODE_Y
                     }
                 }
                 truckNodes.push(customerTruck);
-
-                console.log(tableNodes.at(tableNodes.length -1).position);
 
                 const customerNode = customer_output ? [{
                     id: customer_output.id,
@@ -132,7 +137,6 @@ function VSMapBoard(props) {
 
                 Object.entries(processTables).filter(([key, table], index) => {
                     if (table.position === 1) {
-                        console.log(table);
                         const edgeToSupply = {
                             id: `${supply.id}:${table.id}`,
                             source: `${table.id}`,
@@ -164,15 +168,35 @@ function VSMapBoard(props) {
     }, [id]);
 
 
-
-    async function fetchVSData(id) {
-        try {
-            const response = await Axios.get(`http://localhost:8080/vsm/${id}`);
-            setVsMap(response.data.value_stream_map)
-            return response;
-        }
-        catch (err) {
-            console.log(err);
+    const getUnitDisplayName = (unitType) => {
+        switch(unitType){
+            case "KG":{
+                return t("units.kg");
+            }
+            case "PIECE":{
+                return t("units.piece");
+            }
+            case "PALLET":{
+                return t("units.pallet");
+            }
+            case "CART":{
+                return t("units.cart");
+            }
+            case "HOUR":{
+                return t("units.hour");
+            }
+            case "NUMBER":{
+                return "";
+            }
+            case "DAY":{
+                return t("units.day");
+            }
+            case "SECOND":{
+                return t("units.second");
+            }
+            case "PERCENT":{
+                return "%";
+            }
         }
     }
 
@@ -190,6 +214,10 @@ function VSMapBoard(props) {
         [edges],
     );
 
+    const handleProcessTablesChange = (updatedTables) => {
+        setpTables(updatedTables);
+    }
+
     const nodeTypes = {
         table: TableNode,
         supply: SupplyNode,
@@ -198,77 +226,48 @@ function VSMapBoard(props) {
         truck: TruckNode
     }
 
-    return (
-        <div className="vs-map">
-            <div className="flow-panel">
-                <h2>{title}</h2>
-
-                <div className="flow-basics">
-                    <ReactFlow
-                        edges={edges}
-                        nodes={nodes}
-                        key={`${nodes.length}-${edges.length}`}
-                        nodeTypes={nodeTypes}
-                        onNodesChange={onNodesChange}
-                        onEdgesChange={onEdgesChange}
-                    >
-                        <Background
-                            color="#beaadd"
-                            bgColor="#FFFFFF"
-                            size="2"
-                            variant={BackgroundVariant.Dots}
-                        />
-                        <Controls />
-                        <MiniMap />
-                    </ReactFlow>
+    if (vsMap === undefined) {
+        return (
+            <div className="vs-map">
+                <div className="flow-panel">
+                    <h2>{t("common.loading") || "Loading..."}</h2>
                 </div>
+                <WorkPanel processTables={pTables} />
             </div>
+        );
+    }
+    else {
+        return (
+            <div className="vs-map">
+                <div className="flow-panel">
+                    <h2>{title}</h2>
 
-            <div className="work-panel">
-                <h2 className="work-panel-title">Work Panel</h2>
-
-                <div className="work-panel-section">
-                    <h3>Process Table</h3>
-                    <div className="work-panel-option">
-                        <input type="checkbox" id="table1" />
-                        <label htmlFor="table1">Table 1</label>
+                    <div className="flow-basics">
+                        <ReactFlow
+                            edges={edges}
+                            nodes={nodes}
+                            key={`${nodes.length}-${edges.length}`}
+                            nodeTypes={nodeTypes}
+                            onNodesChange={onNodesChange}
+                            onEdgesChange={onEdgesChange}
+                        >
+                            <Background
+                                color="#beaadd"
+                                bgColor="#FFFFFF"
+                                size="2"
+                                variant={BackgroundVariant.Dots}
+                            />
+                            <Controls />
+                            <MiniMap />
+                        </ReactFlow>
                     </div>
-                    <div className="work-panel-option">
-                        <input type="checkbox" id="table2" />
-                        <label htmlFor="table2">Table 2</label>
-                    </div>
-                    <button className="work-panel-button">Add Node</button>
                 </div>
-
-                <div className="work-panel-section">
-                    <h3>Client</h3>
-                    <div className="work-panel-option">
-                        <input type="checkbox" id="client1" />
-                        <label htmlFor="client1">Client A</label>
-                    </div>
-                    <div className="work-panel-option">
-                        <input type="checkbox" id="client2" />
-                        <label htmlFor="client2">Client B</label>
-                    </div>
-                    <button className="work-panel-button">Add Node</button>
-                </div>
-
-                <div className="work-panel-section">
-                    <h3>Inventory</h3>
-                    <div className="work-panel-option">
-                        <input type="checkbox" id="inv1" />
-                        <label htmlFor="inv1">Inventory 1</label>
-                    </div>
-                    <div className="work-panel-option">
-                        <input type="checkbox" id="inv2" />
-                        <label htmlFor="inv2">Inventory 2</label>
-                    </div>
-                    <button className="work-panel-button">Add Node</button>
-                    <button className="work-panel-button">Add Edge</button>
-                </div>
+                <WorkPanel processTables={pTables} />
             </div>
-        </div>
-    );
+        );
+    }
+
+
 }
 
 export default VSMapBoard;
