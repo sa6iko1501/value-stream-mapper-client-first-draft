@@ -18,6 +18,7 @@ function App() {
           <Route path="/value-stream-maps" element={<VSMaps />} />
           <Route path="/vs-map/:id" element={<VSMapBoard />} />
           <Route path="/edit-process-table/:id" element={<ProcessTableForm />} />
+          <Route path="/process-table/new" element={<ProcessTableForm />}/>
         </Route>
       </Routes>
     </HashRouter>

@@ -2,8 +2,9 @@ import './WorkPanel.css'
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router'
 import { useTranslation } from "react-i18next";
+import Axios from 'axios';
 
-function WorkPanel({ processTables }) {
+function WorkPanel({ processTables, unitId, vsmId }) {
     const navigate = useNavigate();
     const { t } = useTranslation()
     const [tables, setTables] = useState([]);
@@ -19,11 +20,22 @@ function WorkPanel({ processTables }) {
         );
     }
 
+    const processTablesCount = Object.entries(processTables).length;
 
     const handleTableClick = (tableId) => {
         const table = Object.values(processTables).find(t => t.id === tableId);
         navigate(`/edit-process-table/${tableId}`, { state: { table } });
     }
+
+    const handleDeleteTableClick = async (tableId) => {
+        try {
+            await Axios.delete(`http://localhost:8080/table/${tableId}`);
+
+            window.location.reload();
+        } catch (err) {
+            console.error("Failed to delete table:", err);
+        }
+    };
 
     return (
         <div className="work-panel">
@@ -40,7 +52,7 @@ function WorkPanel({ processTables }) {
                             key={table.id}
                         >
                             <label>
-                                {table.title}
+                                {table.position}. {table.title}
                             </label>
 
                             <button
@@ -49,9 +61,35 @@ function WorkPanel({ processTables }) {
                             >
                                 {t("work-panel.modify-label")}
                             </button>
+                            <button className='button-del' onClick={() => handleDeleteTableClick(table.id)}>
+                                ×
+                            </button>
                         </div>
                     ))
                 )}
+                <button onClick={() => navigate("/process-table/new", {
+                    state: {
+                        position: processTablesCount + 1,
+                        unitId: unitId,
+                        vsmId: vsmId
+                    }
+                })} className="work-panel-button">
+                    {t('work-panel.add-new')}
+                </button>
+            </div>
+
+            <div className="work-panel-section">
+                <h3>Supplier</h3>
+                <div className="work-panel-option">
+                    <input type="checkbox" id="inv1" />
+                    <label htmlFor="inv1">Inventory 1</label>
+                </div>
+                <div className="work-panel-option">
+                    <input type="checkbox" id="inv2" />
+                    <label htmlFor="inv2">Inventory 2</label>
+                </div>
+                <button className="work-panel-button">Add Node</button>
+                <button className="work-panel-button">Add Edge</button>
             </div>
 
             <div className="work-panel-section">
@@ -67,19 +105,7 @@ function WorkPanel({ processTables }) {
                 <button className="work-panel-button">Add Node</button>
             </div>
 
-            <div className="work-panel-section">
-                <h3>Inventory</h3>
-                <div className="work-panel-option">
-                    <input type="checkbox" id="inv1" />
-                    <label htmlFor="inv1">Inventory 1</label>
-                </div>
-                <div className="work-panel-option">
-                    <input type="checkbox" id="inv2" />
-                    <label htmlFor="inv2">Inventory 2</label>
-                </div>
-                <button className="work-panel-button">Add Node</button>
-                <button className="work-panel-button">Add Edge</button>
-            </div>
+
         </div>
     );
 }

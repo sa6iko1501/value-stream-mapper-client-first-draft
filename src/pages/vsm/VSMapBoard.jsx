@@ -32,7 +32,6 @@ function VSMapBoard(props) {
                 const TABLE_NODE_DISTANCE = 400;
                 const TRUCK_NODE_Y = 400;
                 setTitle(title => response.data?.value_stream_map?.title)
-                console.log(processTables);
                 // Transform processTables into nodes
                 const tableNodes = Object.entries(processTables).map(([key, table], index) => ({
                     id: table.id || key,
@@ -167,34 +166,33 @@ function VSMapBoard(props) {
         fetchData();
     }, [id]);
 
-
     const getUnitDisplayName = (unitType) => {
-        switch(unitType){
-            case "KG":{
+        switch (unitType) {
+            case "KG": {
                 return t("units.kg");
             }
-            case "PIECE":{
+            case "PIECE": {
                 return t("units.piece");
             }
-            case "PALLET":{
+            case "PALLET": {
                 return t("units.pallet");
             }
-            case "CART":{
+            case "CART": {
                 return t("units.cart");
             }
-            case "HOUR":{
+            case "HOUR": {
                 return t("units.hour");
             }
-            case "NUMBER":{
+            case "NUMBER": {
                 return "";
             }
-            case "DAY":{
+            case "DAY": {
                 return t("units.day");
             }
-            case "SECOND":{
+            case "SECOND": {
                 return t("units.second");
             }
-            case "PERCENT":{
+            case "PERCENT": {
                 return "%";
             }
         }
@@ -232,7 +230,6 @@ function VSMapBoard(props) {
                 <div className="flow-panel">
                     <h2>{t("common.loading") || "Loading..."}</h2>
                 </div>
-                <WorkPanel processTables={pTables} />
             </div>
         );
     }
@@ -262,7 +259,7 @@ function VSMapBoard(props) {
                         </ReactFlow>
                     </div>
                 </div>
-                <WorkPanel processTables={pTables} />
+                <WorkPanel processTables={pTables} unitId={vsMap.unit.id} vsmId={vsMap.id} />
             </div>
         );
     }

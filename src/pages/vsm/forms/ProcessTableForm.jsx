@@ -1,20 +1,38 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router';
 import { useTranslation } from "react-i18next";
-import { v4 as uuidv4 } from 'uuid';
 import './ProcessTableForm.css';
 import Axios from 'axios';
 
 function ProcessTableForm() {
   const navigate = useNavigate();
   const location = useLocation();
-  const table = location.state?.table;
+  const existingTable = location.state?.table;
+  const position = location.state?.position;
+  const vsmId = location.state?.vsmId;
+  const unitId = location.state?.unitId;
+  const isEditMode = !!existingTable;
   const { t } = useTranslation();
   const { id } = useParams();
-
-  const [title, setTitle] = useState(table?.title || '');
-  const [rows, setRows] = useState(table?.rows || []);
   const [units, setUnits] = useState();
+  const [title, setTitle] = useState(
+    existingTable?.title || ''
+  );
+
+  const [rows, setRows] = useState(
+    existingTable?.rows || []
+  );
+
+  const [inventoryAmount, setInventoryAmount] = useState(
+    existingTable?.inventory?.amount ?? ''
+  );
+
+  const inventoryUnit = units
+    ? Object.entries(units)
+      .flatMap(([, value]) => Array.isArray(value) ? value : [value])
+      .find(unit => unit.id === unitId)
+    : undefined;
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,10 +44,11 @@ function ProcessTableForm() {
       catch (err) {
         console.error(err);
       }
-
     }
+
     fetchData();
   }, []);
+
 
 
   const handleTitleChange = (e) => {
@@ -75,12 +94,10 @@ function ProcessTableForm() {
     rows.forEach((row, index) => {
       const rowNumber = index + 1;
 
-      // Required row type
       if (!row.row_type) {
         errors.push(`Row ${rowNumber}: Row type is required.`);
       }
 
-      // Required value
       if (
         row.value === '' ||
         row.value === null ||
@@ -89,12 +106,10 @@ function ProcessTableForm() {
         errors.push(`Row ${rowNumber}: Value is required.`);
       }
 
-      // Required unit
       if (!row.unit) {
         errors.push(`Row ${rowNumber}: Unit is required.`);
       }
 
-      // Duplicate row types
       if (row.row_type) {
         if (usedRowTypes.has(row.row_type)) {
           errors.push(
@@ -105,7 +120,6 @@ function ProcessTableForm() {
         }
       }
 
-      // Stop here if value is empty
       if (
         row.value === '' ||
         row.value === null ||
@@ -123,15 +137,12 @@ function ProcessTableForm() {
         return;
       }
 
-      // No negative values
       if (numericValue < 0) {
         errors.push(`Row ${rowNumber}: Value cannot be negative.`);
       }
 
-      // Get the unit type from the unit object
       const unitType = row.unit?.unit_type;
 
-      // Percent validation
       if (
         unitType === "PERCENT" &&
         (numericValue < 0 || numericValue > 100)
@@ -141,7 +152,6 @@ function ProcessTableForm() {
         );
       }
 
-      // Number validation
       if (
         unitType === "NUMBER" &&
         !Number.isInteger(numericValue)
@@ -152,40 +162,99 @@ function ProcessTableForm() {
       }
     });
 
+
+
     return errors;
   };
+
+  const validateInventory = () => {
+    const errors = [];
+
+    if (
+      inventoryAmount === '' ||
+      inventoryAmount === null ||
+      inventoryAmount === undefined
+    ) {
+      errors.push('Inventory amount is required.');
+      return errors;
+    }
+
+    const numericAmount = Number(
+      String(inventoryAmount).trim().replace(',', '.')
+    );
+
+    if (!Number.isFinite(numericAmount)) {
+      errors.push('Inventory amount must be a valid number.');
+      return errors;
+    }
+
+    if (numericAmount < 0) {
+      errors.push('Inventory amount cannot be negative.');
+    }
+
+    return errors;
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const validationErrors = validateRows();
+    const validationErrors = [
+      ...validateRows(),
+      ...validateInventory()
+    ];
 
     if (validationErrors.length > 0) {
       alert(validationErrors.join('\n'));
       return;
     }
 
-    const processTableDto = {
-      ...table,
-      title,
-      rows
+    const updatedInventory = {
+      ...(existingTable?.inventory || { id: null, unit: inventoryUnit.name, nextInLine: null }),
+      amount: Number(
+        String(inventoryAmount).trim().replace(',', '.')
+      )
     };
 
-    console.log(processTableDto);
+    const processTableDto = isEditMode
+      ? {
+        ...existingTable,
+        title,
+        rows,
+        inventory: updatedInventory
+      }
+      : {
+        title,
+        rows,
+        inventory: updatedInventory,
+        position: position,
+        vsm_id: vsmId
+      };
 
     try {
-      await Axios.post(
-        "http://localhost:8080/table",
-        processTableDto
-      );
+
+      if (isEditMode) {
+        await Axios.put(
+          "http://localhost:8080/table",
+          processTableDto
+        );
+      } else {
+        await Axios.post(
+          "http://localhost:8080/table",
+          processTableDto
+        );
+      }
 
       navigate(-1);
+
     } catch (err) {
-      console.error("Failed to save table:", err);
+      console.error(
+        `Failed to ${isEditMode ? 'update' : 'create'} table:`,
+        err
+      );
     }
   };
 
-  console.log(rows);
   const handleRowTypeChange = (index, rowType) => {
     const newRows = [...rows];
     newRows[index] = {
@@ -257,9 +326,6 @@ function ProcessTableForm() {
 
   };
 
-  if (!table) {
-    return <div className="process-table-form">No table data provided.</div>;
-  }
 
   if (units === undefined) {
     return (
@@ -283,7 +349,7 @@ function ProcessTableForm() {
           ←
         </button>
         <div className='process-table-form-title'>
-          <h2>{t("edit-process-table.title") || "Edit process table"}</h2>
+          <h2>{isEditMode ? t("edit-process-table.title") : t("edit-process-table.title-create")}</h2>
         </div>
       </div>
 
@@ -358,8 +424,37 @@ function ProcessTableForm() {
         ))}
 
         <button type="button" onClick={addRow} className="add-btn">
-          {t("edit-process-table.add-row") || "Add row"}
+          {`+ ${t("edit-process-table.add-row")}` || "Add row"}
         </button>
+
+        <h3>Inventory</h3>
+
+        <div className="inventory-edit">
+          <div className="form-group">
+            <label>Amount:</label>
+
+            <input
+              type="number"
+              value={inventoryAmount}
+              onChange={(e) => setInventoryAmount(e.target.value)}
+              min="0"
+              step="any"
+              placeholder="Inventory amount"
+              className="form-input"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Unit:</label>
+
+            <input
+              type="text"
+              value={isEditMode ? existingTable?.inventory?.unit : inventoryUnit.name}
+              disabled
+              className="form-input"
+            />
+          </div>
+        </div>
 
         <div className="form-actions">
           <button type="submit" className="save-btn">{t("edit-process-table.save")}</button>

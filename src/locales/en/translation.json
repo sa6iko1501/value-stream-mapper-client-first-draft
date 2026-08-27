@@ -22,6 +22,7 @@
     },
     "edit-process-table": {
         "title": "Edit process table",
+        "title-create": "Create process table",
         "save": "Save",
         "add-row": "Add row",
         "cancel": "Cancel"
@@ -29,7 +30,8 @@
     "work-panel":{
         "title": "Work Panel",
         "process-tables-label": "Process Tables",
-        "modify-label": "Modify"
+        "modify-label": "Modify",
+        "add-new": "Add new"
     },
     "units": {
         "second": "sec",
@@ -38,7 +40,17 @@
         "piece": "pcs",
         "pallet": "pallets",
         "day": "days",
-        "cart": "carts"
+        "cart": "carts",
+        "second_full": "Second",
+        "hour_full": "Hour",
+        "kg_full": "Kilogram",
+        "piece_full": "Piece",
+        "pallet_full": "Pallet",
+        "day_full": "Day",
+        "cart_full": "Cart",
+        "percent_full": "Percent",
+        "number_full": "Number"
+
     },
     "common": {
         "loading": "Loading..."

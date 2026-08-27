@@ -20,16 +20,18 @@
         "title": "Заглавие",
         "date": "Дата"
     },
-        "edit-process-table": {
+    "edit-process-table": {
         "title": "Промяна на таблица с процес",
+        "title-create": "Създай таблица с процес",
         "save": "Запази",
         "add-row": "Добави ред",
         "cancel": "Отказване"
     },
-       "work-panel":{
+    "work-panel":{
         "title": "Работен Панел",
         "process-tables-label": "Таблици с процеси",
-        "modify-label": "Промени"
+        "modify-label": "Промени",
+        "add-new": "Добави нов"
     },
     "units": {
         "second": "сек",
@@ -38,7 +40,16 @@
         "piece": "детайли",
         "pallet": "палети",
         "day": "дни",
-        "cart": "колички"
+        "cart": "колички",
+        "second_full": "Секунда",
+        "hour_full": "Час",
+        "kg_full": "Килограм",
+        "piece_full": "Детайл",
+        "pallet_full": "Палет",
+        "day_full": "Ден",
+        "cart_full": "Количка",
+        "percent_full": "Процент",
+        "number_full": "Число"
     },
     "common": {
         "loading": "Зареждане..."
