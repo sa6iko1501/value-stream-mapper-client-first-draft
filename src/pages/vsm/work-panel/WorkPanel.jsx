@@ -4,13 +4,9 @@ import { useNavigate } from 'react-router'
 import { useTranslation } from "react-i18next";
 import Axios from 'axios';
 
-function WorkPanel({ processTables, unitId, vsmId }) {
+function WorkPanel({ processTables, unitId, vsmId, supply }) {
     const navigate = useNavigate();
     const { t } = useTranslation()
-    const [tables, setTables] = useState([]);
-    const [rows, setRows] = useState([]);
-    const [selectedTableId, setSelectedTableId] = useState(null);
-
 
     if (Object.entries(processTables).length === 0) {
         return (
@@ -35,6 +31,25 @@ function WorkPanel({ processTables, unitId, vsmId }) {
         } catch (err) {
             console.error("Failed to delete table:", err);
         }
+    };
+
+    const handleSupplierClick = (supplierId) => {
+        const supplier = supply.suppliers.find(
+            supplier => supplier.id === supplierId
+        );
+
+        if (!supplier) {
+            console.error("Supplier not found:", supplierId);
+            return;
+        }
+
+        navigate(`/supplier/${supplierId}/edit`, {
+            state: {
+                supplier,
+                supply,
+                vsmId
+            }
+        });
     };
 
     return (
@@ -76,27 +91,57 @@ function WorkPanel({ processTables, unitId, vsmId }) {
                 })} className="work-panel-button">
                     {t('work-panel.add-new')}
                 </button>
+                <button onClick={() => navigate("/process-table/positioning", {
+                    state: {
+                        vsmId: vsmId,
+                        tables: processTables
+                    }
+                })} className="work-panel-button">
+                    {t('work-panel.positioning-btn')}
+                </button>
             </div>
 
             <div className="work-panel-section">
-                <h3>Supplier</h3>
-                <div className="work-panel-option">
-                    <input type="checkbox" id="inv1" />
-                    <label htmlFor="inv1">Inventory 1</label>
-                </div>
-                <div className="work-panel-option">
-                    <input type="checkbox" id="inv2" />
-                    <label htmlFor="inv2">Inventory 2</label>
-                </div>
-                <button className="work-panel-button">Add Node</button>
-                <button className="work-panel-button">Add Edge</button>
+                <h3>{t("work-panel.supply-title")}</h3>
+                {supply.suppliers.length === 0 ? (
+                    <p>No suppliers available.</p>
+                ) : (
+                    supply.suppliers.map(supplier => (
+                        <div
+                            className="work-panel-option"
+                            key={supplier.id}
+                        >
+                            <label>
+                                {supplier.name}
+                            </label>
+
+                            <button
+                                type="button"
+                                onClick={() => handleSupplierClick(supplier.id)}
+                            >
+                                {t("work-panel.modify-label")}
+                            </button>
+                            <button className='button-del' onClick={() => handleDeleteTableClick(supplier.id)}>
+                                ×
+                            </button>
+                        </div>
+                    ))
+                )}
+                <button onClick={() => navigate("/process-table/positioning", {
+                    state: {
+                        vsmId: vsmId,
+                        supply: supply
+                    }
+                })} className="work-panel-button">
+                    {t('common.configure')}
+                </button>
             </div>
 
             <div className="work-panel-section">
                 <h3>Client</h3>
                 <div className="work-panel-option">
                     <input type="checkbox" id="client1" />
-                    <label htmlFor="client1">Client A</label>
+                    <label htmlFor="client1">Client A</label>/supply
                 </div>
                 <div className="work-panel-option">
                     <input type="checkbox" id="client2" />

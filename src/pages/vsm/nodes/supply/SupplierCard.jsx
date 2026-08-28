@@ -1,6 +1,6 @@
 import './SupplierCard.css';
 
-function SupplierCard({ id, unit_name, daily_supply, name }) {
+function SupplierCard({ id, unit_name, supply, name }) {
   return (
     <div className="supplier-card">
       <div className="supplier-card-row">
@@ -13,7 +13,7 @@ function SupplierCard({ id, unit_name, daily_supply, name }) {
       </div>
       <div className="supplier-card-row">
         <span className="supplier-card-label">Daily Supply:</span>
-        <span className="supplier-card-value">{daily_supply}</span>
+        <span className="supplier-card-value">{supply}</span>
       </div>
     </div>
   );

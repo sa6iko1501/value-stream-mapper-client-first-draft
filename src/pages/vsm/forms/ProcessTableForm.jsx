@@ -355,7 +355,7 @@ function ProcessTableForm() {
 
       <form onSubmit={handleSubmit} noValidate>
         <div className="form-group">
-          <label>Title:</label>
+          <label>{t("edit-process-table.title-field")}</label>
           <input
             type="text"
             value={title}
@@ -365,7 +365,7 @@ function ProcessTableForm() {
           />
         </div>
 
-        <h3>Rows</h3>
+        <h3>{t("edit-process-table.rows-section")}</h3>
         {rows.map((row, index) => (
           <div key={index} className="row-edit">
             <select
@@ -427,11 +427,11 @@ function ProcessTableForm() {
           {`+ ${t("edit-process-table.add-row")}` || "Add row"}
         </button>
 
-        <h3>Inventory</h3>
+        <h3>{t("edit-process-table.inventory-section")}</h3>
 
         <div className="inventory-edit">
           <div className="form-group">
-            <label>Amount:</label>
+            <label>{`${t("edit-process-table.amount")}:`}</label>
 
             <input
               type="number"
@@ -445,7 +445,7 @@ function ProcessTableForm() {
           </div>
 
           <div className="form-group">
-            <label>Unit:</label>
+            <label>{`${t("edit-process-table.unit")}:`}</label>
 
             <input
               type="text"
@@ -457,9 +457,9 @@ function ProcessTableForm() {
         </div>
 
         <div className="form-actions">
-          <button type="submit" className="save-btn">{t("edit-process-table.save")}</button>
+          <button type="submit" className="save-btn">{t("common.save")}</button>
           <button type="button" onClick={() => navigate(-1)} className="cancel-btn">
-            {t("edit-process-table.cancel") || "Cancel"}
+            {t("common.cancel") || "Cancel"}
           </button>
         </div>
       </form>

@@ -15,7 +15,7 @@ function CustomerNode({ data }) {
                         id={customer.id}
                         name={customer.name}
                         unit_name={customer.unit_name}
-                        daily_supply={customer.daily_required_output}
+                        daily_required_output={customer.daily_required_output}
                     />
                 ))}
             </div>

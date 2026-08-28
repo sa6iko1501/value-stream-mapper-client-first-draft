@@ -17,21 +17,29 @@
     },
     "vs-maps": {
         "greeting": "Това е страницата с Value-Stream картите",
-        "title": "Заглавие",
+        "title": "Име",
         "date": "Дата"
     },
     "edit-process-table": {
         "title": "Промяна на таблица с процес",
         "title-create": "Създай таблица с процес",
-        "save": "Запази",
-        "add-row": "Добави ред",
-        "cancel": "Отказване"
+        "title-field": "Име",
+        "rows-section": "Редове",
+        "inventory-section": "Инвентар",
+        "amount": "Количество",
+        "unit": "Единица",
+        "add-row": "Добави ред"
     },
     "work-panel":{
         "title": "Работен Панел",
         "process-tables-label": "Таблици с процеси",
         "modify-label": "Промени",
-        "add-new": "Добави нов"
+        "add-new": "Добави нов",
+        "positioning-btn": "Настройка на позициите",
+        "supply-title": "Доставка"
+    },
+    "positioning":{
+        "title": "Позициониране"
     },
     "units": {
         "second": "сек",
@@ -51,7 +59,17 @@
         "percent_full": "Процент",
         "number_full": "Число"
     },
+    "supplier-form":{
+        "title": "Промяна на доставчик",
+        "supply": "Доставя",
+        "unit": "Единица"
+    },
     "common": {
-        "loading": "Зареждане..."
+        "loading": "Зареждане...",
+        "save": "Запази",
+        "cancel": "Отакзване",
+        "add-new": "Добави нов",
+        "configure": "Конфигурирай",
+        "name": "Име"
     }
 }

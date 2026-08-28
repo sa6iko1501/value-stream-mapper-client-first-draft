@@ -15,7 +15,7 @@ function SupplyNode({ data }) {
                         id={supplier.id}
                         name={supplier.name}
                         unit_name={supplier.unit_name}
-                        daily_supply={supplier.daily_supply}
+                        supply={supplier.supply}
                     />
                 ))}
             </div>

@@ -23,15 +23,23 @@
     "edit-process-table": {
         "title": "Edit process table",
         "title-create": "Create process table",
-        "save": "Save",
-        "add-row": "Add row",
-        "cancel": "Cancel"
+        "title-field": "Title",
+        "rows-section": "Rows",
+        "inventory-section": "Inventory",
+        "amount": "Amount",
+        "unit": "Unit",
+        "add-row": "Add row"
     },
     "work-panel":{
         "title": "Work Panel",
         "process-tables-label": "Process Tables",
         "modify-label": "Modify",
-        "add-new": "Add new"
+        "add-new": "Add new",
+        "positioning-btn": "Positioning settings",
+        "supply-title": "Supply"
+    },
+    "positioning":{
+        "title": "Positioning"
     },
     "units": {
         "second": "sec",
@@ -52,7 +60,17 @@
         "number_full": "Number"
 
     },
+    "supplier-form":{
+        "title": "Edit supplier",
+        "supply": "Supply",
+        "unit": "Unit"
+    },
     "common": {
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "save": "Save",
+        "cancel": "Cancel",
+        "add-new": "Add new",
+        "configure": "Configure",
+        "name": "Name"
     }
 }
