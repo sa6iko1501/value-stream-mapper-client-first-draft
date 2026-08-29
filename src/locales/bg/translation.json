@@ -34,9 +34,9 @@
         "title": "Работен Панел",
         "process-tables-label": "Таблици с процеси",
         "modify-label": "Промени",
-        "add-new": "Добави нов",
         "positioning-btn": "Настройка на позициите",
-        "supply-title": "Доставка"
+        "supply-title": "Доставка",
+        "customer-section": "Клиенти"
     },
     "positioning":{
         "title": "Позициониране"
@@ -61,8 +61,15 @@
     },
     "supplier-form":{
         "title": "Промяна на доставчик",
+        "title-add": "Добавяне на доставчик",
         "supply": "Доставя",
         "unit": "Единица"
+    },
+    "customer-form":{
+        "title": "Промяна на клиент",
+        "title-add": "Добавяне на клиент",
+        "daily-req": "Дневно изискване",
+        "Unit": "Единица"
     },
     "common": {
         "loading": "Зареждане...",

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate, useLocation, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import Axios from 'axios';
 
@@ -8,100 +8,139 @@ import './ProcessTableForm.css'
 function SupplierForm() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { supplierId } = useParams();
+
+    const { supply, vsmId } = location.state || {};
+
+    const isEditMode = !!supplierId;
+
+    const existingSupplier = isEditMode
+        ? supply?.suppliers?.find(
+            supplier => supplier.id === supplierId
+        )
+        : null;
     const { t } = useTranslation();
 
-    const supplier = location.state?.supplier;
-    const supply = location.state?.supply;
-    const vsmId = location.state?.vsmId;
-
-    const [name, setName] = useState(supplier?.name || '');
-    const [unitName, setUnitName] = useState(
-        supplier?.unit_name || ''
+    const [name, setName] = useState(
+        existingSupplier?.name || ""
     );
+
     const [supplierSupply, setSupplierSupply] = useState(
-        supplier?.supply ?? ''
+        existingSupplier?.supply ?? ""
     );
 
-    if (!supplier || !supply) {
+    if (!supply) {
         return (
-            <div className="supplier-form">
-                No supplier data provided.
+            <div className="process-table-form">
+                No supply data provided.
             </div>
         );
     }
 
-    const validateSupplier = () => {
+    const validate = () => {
         const errors = [];
 
         if (!name.trim()) {
-            errors.push('Supplier name is required.');
-        }
-
-        if (!unitName.trim()) {
-            errors.push('Unit name is required.');
+            errors.push("Supplier name is required.");
         }
 
         if (
-            supplierSupply === '' ||
+            supplierSupply === "" ||
             supplierSupply === null ||
             supplierSupply === undefined
         ) {
-            errors.push('Supply amount is required.');
-        }
+            errors.push("Supply amount is required.");
+        } else {
+            const numericSupply = Number(
+                String(supplierSupply).trim().replace(",", ".")
+            );
 
-        const numericSupply = Number(
-            String(supplierSupply).trim().replace(',', '.')
-        );
+            if (!Number.isFinite(numericSupply)) {
+                errors.push("Supply must be a valid number.");
+            }
 
-        if (!Number.isFinite(numericSupply)) {
-            errors.push('Supply must be a valid number.');
-        }
-
-        if (numericSupply < 0) {
-            errors.push('Supply cannot be negative.');
+            if (numericSupply < 0) {
+                errors.push("Supply cannot be negative.");
+            }
         }
 
         return errors;
     };
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const validationErrors = validateSupplier();
+        const validationErrors = validate();
 
         if (validationErrors.length > 0) {
-            alert(validationErrors.join('\n'));
+            alert(validationErrors.join("\n"));
             return;
         }
 
-        const updatedSupplier = {
-            ...supplier,
-            name,
-            unit_name: unitName,
-            supply: Number(
-                String(supplierSupply).replace(',', '.')
-            )
+        const numericSupply = Number(
+            String(supplierSupply).trim().replace(",", ".")
+        );
+
+        let updatedSuppliers;
+
+        if (isEditMode) {
+            /*
+             * Replace the existing supplier inside supply.suppliers.
+             */
+            updatedSuppliers = supply.suppliers.map((supplier) =>
+                supplier.id === existingSupplier.id
+                    ? {
+                        ...supplier,
+                        name: name.trim(),
+                        supply: numericSupply,
+                        unit_name: supply.unit
+                    }
+                    : supplier
+            );
+        } else {
+            /*
+             * Add a new supplier to supply.suppliers.
+             */
+            const newSupplier = {
+                id: null,
+                name: name.trim(),
+                supply: numericSupply,
+                unit_name: supply.unit
+            };
+
+            updatedSuppliers = [
+                ...supply.suppliers,
+                newSupplier
+            ];
+        }
+
+        /*
+         * Construct the complete SupplyDTO expected by the backend.
+         */
+        const supplyDto = {
+            ...supply,
+            suppliers: updatedSuppliers
         };
 
-        const updatedSupply = {
-            ...supply,
-            suppliers: supply.suppliers.map(currentSupplier =>
-                currentSupplier.id === supplier.id
-                    ? updatedSupplier
-                    : currentSupplier
-            )
-        };;
 
         try {
-            await Axios.put(
-                `http://localhost:8080/vsm/${vsmId}/supply/supplier`,
-                updatedSupply
-            );
+            if (isEditMode) {
+                await Axios.put(
+                    `http://localhost:8080/vsm/${vsmId}/supply/supplier`,
+                    supplyDto);
 
+
+            }
+            else {
+                await Axios.post(
+                    `http://localhost:8080/vsm/${vsmId}/supply/supplier`,
+                    supplyDto);
+            }
             navigate(-1);
         } catch (err) {
             console.error(
-                'Failed to update supplier:',
+                "Failed to save supplier:",
                 err
             );
         }
@@ -111,9 +150,9 @@ function SupplierForm() {
         <div className="process-table-form">
             <div
                 style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginBottom: 'var(--spacing-md)'
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "var(--spacing-md)"
                 }}
             >
                 <button
@@ -125,15 +164,20 @@ function SupplierForm() {
                 </button>
 
                 <div className="process-table-form-title">
-                    <h2>{t("supplier-form.title")}</h2>
+                    <h2>
+                        {isEditMode
+                            ? t("supplier-form.title")
+                            : t("supplier-form.title-add")}
+                    </h2>
                 </div>
             </div>
-
 
             <form onSubmit={handleSubmit} noValidate>
 
                 <div className="form-group">
-                    <label>{`${t("common.name")}:`}</label>
+                    <label>
+                        {t("common.name", "Name")}:
+                    </label>
 
                     <input
                         type="text"
@@ -144,7 +188,9 @@ function SupplierForm() {
                 </div>
 
                 <div className="form-group">
-                    <label>{`${t("supplier-form.supply")}:`}</label>
+                    <label>
+                        {t("supplier-form.supply", "Supply")}:
+                    </label>
 
                     <input
                         type="number"
@@ -157,14 +203,17 @@ function SupplierForm() {
                         className="form-input"
                     />
                 </div>
+
                 <div className="form-group">
-                    <label>{`${t("edit-process-table.unit")}:`}</label>
+                    <label>
+                        {t("edit-process-table.unit", "Unit")}:
+                    </label>
 
                     <input
                         type="text"
-                        value={unitName}
+                        value={supply.unit || ""}
                         disabled
-                        className="form-input readonly-input"
+                        className="form-input"
                     />
                 </div>
 
@@ -173,7 +222,7 @@ function SupplierForm() {
                         type="submit"
                         className="save-btn"
                     >
-                        {t('common.save')}
+                        {t("common.save", "Save")}
                     </button>
 
                     <button
@@ -181,9 +230,10 @@ function SupplierForm() {
                         onClick={() => navigate(-1)}
                         className="cancel-btn"
                     >
-                        {t('common.cancel')}
+                        {t("common.cancel", "Cancel")}
                     </button>
                 </div>
+
             </form>
         </div>
     );

@@ -20,7 +20,6 @@ function CustomerNode({ data }) {
                 ))}
             </div>
             <Handle type="source" position={Position.Left} />
-            <Handle type="target" position={Position.Right} />
         </div>
     );
 }

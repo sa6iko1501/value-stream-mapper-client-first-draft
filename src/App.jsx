@@ -9,6 +9,7 @@ import ProcessTableForm from './pages/vsm/forms/ProcessTableForm.jsx';
 import ProcessTablePositioningForm from './pages/vsm/forms/ProcessTablePositioningForm.jsx';
 import SupplyForm from './pages/vsm/forms/SupplyForm.jsx';
 import SupplierForm from './pages/vsm/forms/SupplierForm.jsx';
+import CustomerForm from './pages/vsm/forms/CustomerForm.jsx';
 
 function App() {
   return <>
@@ -23,8 +24,10 @@ function App() {
           <Route path="/process-table/new" element={<ProcessTableForm />} />
           <Route path="/process-table/positioning" element={<ProcessTablePositioningForm />} />
           <Route path="/supply" element={<SupplyForm />} />
-          <Route path="/supplier/:supplierId/edit" element={<SupplierForm />}
-          />
+          <Route path="/supplier/:supplierId/edit" element={<SupplierForm />} />
+          <Route path="/supplier/new" element={<SupplierForm />} />
+          <Route path="/customer/:customerId/edit" element={<CustomerForm />} />
+          <Route path="/customer/new" element={<CustomerForm />} />
         </Route>
       </Routes>
     </HashRouter>

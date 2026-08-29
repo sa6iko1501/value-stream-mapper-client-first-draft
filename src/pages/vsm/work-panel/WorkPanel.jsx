@@ -1,10 +1,9 @@
 import './WorkPanel.css'
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router'
 import { useTranslation } from "react-i18next";
 import Axios from 'axios';
 
-function WorkPanel({ processTables, unitId, vsmId, supply }) {
+function WorkPanel({ processTables, unitId, vsmId, supply, customerOutput }) {
     const navigate = useNavigate();
     const { t } = useTranslation()
 
@@ -25,32 +24,56 @@ function WorkPanel({ processTables, unitId, vsmId, supply }) {
 
     const handleDeleteTableClick = async (tableId) => {
         try {
-            await Axios.delete(`http://localhost:8080/table/${tableId}`);
+            if (processTablesCount > 1) {
+                await Axios.delete(`http://localhost:8080/table/${tableId}`);
 
-            window.location.reload();
+                window.location.reload();
+            }
         } catch (err) {
             console.error("Failed to delete table:", err);
         }
     };
 
     const handleSupplierClick = (supplierId) => {
-        const supplier = supply.suppliers.find(
-            supplier => supplier.id === supplierId
-        );
-
-        if (!supplier) {
-            console.error("Supplier not found:", supplierId);
-            return;
-        }
-
         navigate(`/supplier/${supplierId}/edit`, {
             state: {
-                supplier,
                 supply,
                 vsmId
             }
         });
     };
+
+    const handleDeleteSupplierClick = async (supplierId) => {
+        try {
+            if (supply.suppliers.length > 1) {
+                await Axios.delete(`http://localhost:8080/vsm/${vsmId}/supply/supplier/${supplierId}`);
+                window.location.reload();
+            }
+        } catch (err) {
+            console.error("Failed to delete supplier:", err);
+        }
+    }
+
+     const handleCustomerClick = (customerId) => {
+        navigate(`/customer/${customerId}/edit`, {
+            state: {
+                customerOutput,
+                vsmId
+            }
+        });
+    };
+
+    const handleDeleteCustomerClick = async (customerId) => {
+        try {
+            if (customerOutput.customers.length > 1) {
+                await Axios.delete(`http://localhost:8080/vsm/${vsmId}/customer-output/customer/${customerId}`);
+                window.location.reload();
+            }
+        } catch (err) {
+            console.error("Failed to delete customer:", err);
+        }
+    }
+
 
     return (
         <div className="work-panel">
@@ -89,7 +112,7 @@ function WorkPanel({ processTables, unitId, vsmId, supply }) {
                         vsmId: vsmId
                     }
                 })} className="work-panel-button">
-                    {t('work-panel.add-new')}
+                    {t('common.add-new')}
                 </button>
                 <button onClick={() => navigate("/process-table/positioning", {
                     state: {
@@ -121,33 +144,66 @@ function WorkPanel({ processTables, unitId, vsmId, supply }) {
                             >
                                 {t("work-panel.modify-label")}
                             </button>
-                            <button className='button-del' onClick={() => handleDeleteTableClick(supplier.id)}>
+                            <button className='button-del' onClick={() => handleDeleteSupplierClick(supplier.id)}>
                                 ×
                             </button>
                         </div>
                     ))
                 )}
-                <button onClick={() => navigate("/process-table/positioning", {
-                    state: {
-                        vsmId: vsmId,
-                        supply: supply
+                <button
+                    onClick={() =>
+                        navigate("/supplier/new", {
+                            state: {
+                                supply,
+                                vsmId
+                            }
+                        })
                     }
-                })} className="work-panel-button">
-                    {t('common.configure')}
+                    className="work-panel-button"
+                >
+                    {t("common.add-new")}
                 </button>
             </div>
 
             <div className="work-panel-section">
-                <h3>Client</h3>
-                <div className="work-panel-option">
-                    <input type="checkbox" id="client1" />
-                    <label htmlFor="client1">Client A</label>/supply
-                </div>
-                <div className="work-panel-option">
-                    <input type="checkbox" id="client2" />
-                    <label htmlFor="client2">Client B</label>
-                </div>
-                <button className="work-panel-button">Add Node</button>
+                <h3>{t("work-panel.customer-section")}</h3>
+                {customerOutput.customers.length === 0 ? (
+                    <p>No customers available.</p>
+                ) : (
+                    customerOutput.customers.map(customer => (
+                        <div
+                            className="work-panel-option"
+                            key={customer.id}
+                        >
+                            <label>
+                                {customer.name}
+                            </label>
+
+                            <button
+                                type="button"
+                                onClick={() => handleCustomerClick(customer.id)}
+                            >
+                                {t("work-panel.modify-label")}
+                            </button>
+                            <button className='button-del' onClick={() => handleDeleteCustomerClick(customer.id)}>
+                                ×
+                            </button>
+                        </div>
+                    ))
+                )}
+                 <button
+                    onClick={() =>
+                        navigate("/customer/new", {
+                            state: {
+                                customerOutput,
+                                vsmId
+                            }
+                        })
+                    }
+                    className="work-panel-button"
+                >
+                    {t("common.add-new")}
+                </button>
             </div>
 
 

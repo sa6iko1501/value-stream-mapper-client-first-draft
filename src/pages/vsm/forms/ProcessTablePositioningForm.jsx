@@ -58,7 +58,6 @@ function ProcessTablePositioningForm() {
     }));
 
     try {
-      console.log(updatedTables);
       setIsSubmitting(true);
 
       await Axios.put(

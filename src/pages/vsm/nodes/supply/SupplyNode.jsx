@@ -19,7 +19,7 @@ function SupplyNode({ data }) {
                     />
                 ))}
             </div>
-            <Handle type="source" position={Position.Left} />
+            <Handle type="source" position={Position.Top} />
             <Handle type="target" position={Position.Right} />
         </div>
     );

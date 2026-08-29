@@ -34,9 +34,9 @@
         "title": "Work Panel",
         "process-tables-label": "Process Tables",
         "modify-label": "Modify",
-        "add-new": "Add new",
         "positioning-btn": "Positioning settings",
-        "supply-title": "Supply"
+        "supply-title": "Supply",
+        "customer-section": "Clients"
     },
     "positioning":{
         "title": "Positioning"
@@ -62,8 +62,15 @@
     },
     "supplier-form":{
         "title": "Edit supplier",
+        "title-add": "Add supplier",
         "supply": "Supply",
         "unit": "Unit"
+    },
+    "customer-form":{
+        "title": "Edit customer",
+        "title-add": "Add customer",
+        "daily-req": "Daily requirement",
+        "Unit": "Unit"
     },
     "common": {
         "loading": "Loading...",

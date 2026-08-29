@@ -259,7 +259,7 @@ function VSMapBoard(props) {
                         </ReactFlow>
                     </div>
                 </div>
-                <WorkPanel processTables={pTables} unitId={vsMap.unit.id} vsmId={vsMap.id} supply={vsMap.supply} />
+                <WorkPanel processTables={pTables} unitId={vsMap.unit.id} vsmId={vsMap.id} supply={vsMap.supply} customerOutput={vsMap.customer_output} />
             </div>
         );
     }
