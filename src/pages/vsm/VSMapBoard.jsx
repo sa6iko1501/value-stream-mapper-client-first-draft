@@ -11,6 +11,8 @@ import InventoryNode from './nodes/inventory/InventoryNode';
 import TruckNode from './nodes/TruckNode';
 import { useTranslation } from "react-i18next";
 import WorkPanel from './work-panel/WorkPanel';
+import ProductionControlNode from './nodes/production-control/ProductionControlNode';
+import { v4 } from 'uuid';
 
 function VSMapBoard(props) {
     const { id } = useParams();
@@ -107,14 +109,33 @@ function VSMapBoard(props) {
                 }
                 truckNodes.push(customerTruck);
 
-                const customerNode = customer_output ? [{
+                const customerNode = customer_output ? {
                     id: customer_output.id,
                     type: 'customer',
                     position: { x: Object.entries(processTables).length * TABLE_NODE_DISTANCE + TABLE_NODE_DISTANCE, y: 0 },
                     data: {
                         customer_output: customer_output
                     }
-                }] : [];
+                } : {};
+
+                const productionControlNode = {
+                    id: v4(),
+                    type: 'productionControl',
+                    position: {
+                        x: (supplierNode.position.x + customerNode.position.x) / 2,
+                        y: -150
+                    },
+                    data: {
+                        rows: [
+                            {
+                                id: "someId",
+                                row_name: "Production Control"
+                            }
+                        ]
+                    }
+                };
+
+                console.log(productionControlNode);
 
 
                 const edgesToSet = [];
@@ -133,6 +154,26 @@ function VSMapBoard(props) {
                     }
                     edgesToSet.push(edgeRight);
                 })
+
+                const edgeFromProdControlToSupplier = {
+                    id: `prodControl:${supply.id}`,
+                    source: `${supply.id}`,
+                    target: `${productionControlNode.id}`,
+                    label: "Weekly Order"
+                }
+
+                edgesToSet.push(edgeFromProdControlToSupplier);
+
+                const edgeFromProdControlToCustomer = {
+                    id: `${customerNode.id}:prodControl`,
+                    source: `${productionControlNode.id}`,
+                    target: `${customerNode.id}`,
+                    label: "Monthly Order"
+                }
+
+                edgesToSet.push(edgeFromProdControlToCustomer);
+
+                
 
                 Object.entries(processTables).filter(([key, table], index) => {
                     if (table.position === 1) {
@@ -156,7 +197,7 @@ function VSMapBoard(props) {
                 });
 
 
-                setNodes(nodes => [...tableNodes, ...customerNode, ...inventoryNodesToSet, ...truckNodes, supplierNode]);
+                setNodes(nodes => [...tableNodes, customerNode, ...inventoryNodesToSet, ...truckNodes, supplierNode, productionControlNode]);
                 setEdges(edges => [...edgesToSet]);
             } catch (err) {
                 console.error('Error:', err);
@@ -221,7 +262,8 @@ function VSMapBoard(props) {
         supply: SupplyNode,
         customer: CustomerNode,
         inventory: InventoryNode,
-        truck: TruckNode
+        truck: TruckNode,
+        productionControl: ProductionControlNode
     }
 
     if (vsMap === undefined) {
