@@ -7,6 +7,120 @@
   color: var(--color-text);
 }
 
+.vsm-title-container {
+  margin-top: 0.2rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+    margin-bottom: var(--spacing-md);
+    min-height: 2.5rem;
+}
+
+.vsm-title-container h2 {
+    margin: 0.4rem;
+    text-align: center;
+    color: var(--color-secondary);
+}
+
+.vsm-title-edit-button {
+    position: absolute;
+    right: 0;
+
+    padding: 0.45rem 0.9rem;
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    border: 1px solid var(--color-secondary);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 0.5rem;
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.vsm-title-edit-button:hover {
+    background-color: var(--color-hover);
+}
+
+.vsm-title-editor {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.vsm-title-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.8rem;
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  border: 1px solid var(--color-secondary);
+  border-radius: var(--border-radius);
+  font-size: 1.5rem;
+  text-align: center;
+  outline: none;
+}
+
+.vsm-title-input:focus {
+  border-color: var(--color--secondary);
+}
+
+.vsm-title-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.vsm-title-save-button,
+.vsm-title-cancel-button {
+  padding: 0.45rem 1rem;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  margin-left: 0.2rem;
+  transition: var(--transition);
+  font-size: 0.85rem;
+}
+
+.vsm-title-save-button {
+  background-color: var(--color-secondary);
+  color: var(--color-primary);
+}
+
+.vsm-title-save-button:hover {
+  background-color: var(--color-hover);
+  color: var(--color-text);
+}
+
+.vsm-title-cancel-button {
+  background-color: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-secondary);
+}
+
+.vsm-title-cancel-button:hover {
+  background-color: var(--color-hover);
+}
+
+.vsm-title-save-button:disabled,
+.vsm-title-cancel-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.vsm-title-error {
+  margin-top: var(--spacing-sm);
+  color: var(--color-secondary);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
 .flow-panel {
   width: 75%;
   height: 100%;
@@ -30,6 +144,6 @@
 }
 
 .react-flow__edge-text {
-    font-size: 10rem;
-    font-weight: bold;
+  font-size: 10rem;
+  font-weight: bold;
 }

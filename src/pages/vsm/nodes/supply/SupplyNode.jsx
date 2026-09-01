@@ -1,13 +1,15 @@
 import { Handle, Position } from "@xyflow/react";
 import SupplierCard from "./SupplierCard";
+import { useTranslation } from "react-i18next";
 import './SupplyNode.css';
 
 function SupplyNode({ data }) {
+    const {t} = useTranslation();
     const suppliers = data.supply?.suppliers || [];
 
     return (
         <div className="supplier-node">
-            <div className="supplier-node-header">Suppliers</div>
+            <div className="supplier-node-header">{t("supplier-card.title")}</div>
             <div className="supplier-node-cards">
                 {suppliers.map(supplier => (
                     <SupplierCard

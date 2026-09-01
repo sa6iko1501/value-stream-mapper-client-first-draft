@@ -16,7 +16,7 @@
         "greeting": "Това е страницата с таблата за управление"
     },
     "vs-maps": {
-        "greeting": "Това е страницата с Value-Stream картите",
+        "greeting": "Value-Stream карти",
         "title": "Име",
         "date": "Дата"
     },
@@ -28,9 +28,11 @@
         "inventory-section": "Инвентар",
         "amount": "Количество",
         "unit": "Единица",
-        "add-row": "Добави ред"
+        "add-row": "Добави ред",
+        "select-unit": "Избор на единица",
+        "select-row-type": "Избор на тип ред"
     },
-    "work-panel":{
+    "work-panel": {
         "title": "Работен Панел",
         "process-tables-label": "Таблици с процеси",
         "modify-label": "Промени",
@@ -38,7 +40,7 @@
         "supply-title": "Доставка",
         "customer-section": "Клиенти"
     },
-    "positioning":{
+    "positioning": {
         "title": "Позициониране"
     },
     "units": {
@@ -59,17 +61,39 @@
         "percent_full": "Процент",
         "number_full": "Число"
     },
-    "supplier-form":{
+    "supplier-form": {
         "title": "Промяна на доставчик",
         "title-add": "Добавяне на доставчик",
         "supply": "Доставя",
         "unit": "Единица"
     },
-    "customer-form":{
+    "supplier-card": {
+        "title": "Доставчици",
+        "unit": "Единица",
+        "daily-supply": "Доставка на ден"
+    },
+    "customer-form": {
         "title": "Промяна на клиент",
         "title-add": "Добавяне на клиент",
         "daily-req": "Дневно изискване",
         "Unit": "Единица"
+    },
+    "customer-card": {
+        "title": "Клиенти",
+        "unit": "Единица",
+        "daily-req": "Дневна квота"
+    },
+    "production-control-card":{
+        "title": "Контрол на продукцията",
+        "weekly-order": "Седмична поръчка",
+        "monthly-order": "Месечна поръчка"
+    },
+    "vs-map-form":{
+        "create-new": "Създаване на нова Value-Stream карта",
+        "basic-info": "Основни данни",
+        "enter-title": "Въвеждане на име",
+        "unit": "Единица",
+        "available-units": "Позволени единици"
     },
     "common": {
         "loading": "Зареждане...",
@@ -77,6 +101,7 @@
         "cancel": "Отакзване",
         "add-new": "Добави нов",
         "configure": "Конфигурирай",
-        "name": "Име"
+        "name": "Име",
+        "change": "Промени"
     }
 }

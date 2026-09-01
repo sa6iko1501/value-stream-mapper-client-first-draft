@@ -1,4 +1,3 @@
-import NavBar from "../../reusable-components/navbar/NavBar";
 import './VSMaps.css'
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from 'react';
@@ -27,6 +26,32 @@ function VSMaps() {
         }
     }
 
+    const handleDeleteVSMapClick = async (vsmId) => {
+        try {
+            await Axios.delete(`http://localhost:8080/vsm/${vsmId}`);
+            window.location.reload();
+        } catch (err) {
+            console.error("Failed to delete customer:", err);
+        }
+    }
+
+    const formatDate = (date) => {
+    if (!date) {
+        return "";
+    }
+
+    const parsedDate = new Date(date);
+
+    return parsedDate.toLocaleString("sv-SE", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+    }).replace(",", "");
+};
+
 
     if (vsMaps === undefined) {
         return (
@@ -47,6 +72,7 @@ function VSMaps() {
                             <tr>
                                 <th>{t("vs-maps.title")}</th>
                                 <th>{t("vs-maps.date")}</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -57,11 +83,30 @@ function VSMaps() {
                                     className="vs-maps-row"
                                 >
                                     <td>{vsMap.title}</td>
-                                    <td>{vsMap.date}</td>
+                                    <td>{formatDate(vsMap.date)}</td>
+                                    <td>
+                                        <button
+                                            type="button"
+                                            className="vs-map-delete-button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDeleteVSMapClick(vsMap.id);
+                                            }}
+                                        >
+                                            ×
+                                        </button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+                    <button
+                        type="button"
+                        className="vs-maps-add-button"
+                        onClick={() => navigate("/vs-map/new")}
+                    >
+                        {t("common.add-new")}
+                    </button>
                 </div>
             </div>
         );

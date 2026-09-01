@@ -23,17 +23,24 @@ function VSMapBoard(props) {
     const [edges, setEdges] = useState([]);
     const [pTables, setpTables] = useState([]);
 
+
+    const [isEditingTitle, setIsEditingTitle] = useState(false);
+    const [titleInput, setTitleInput] = useState('');
+    const [titleError, setTitleError] = useState('');
+    const [isSavingTitle, setIsSavingTitle] = useState(false);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await Axios.get(`http://localhost:8080/vsm/${id}`);
-                setVsMap(vsMap => response.data?.value_stream_map);
+                setVsMap(response.data?.value_stream_map);
                 const processTables = response.data?.value_stream_map?.process_tables ?? [];
                 const supply = response.data?.value_stream_map?.supply;
                 const customer_output = response.data?.value_stream_map.customer_output;
                 const TABLE_NODE_DISTANCE = 400;
                 const TRUCK_NODE_Y = 400;
-                setTitle(title => response.data?.value_stream_map?.title)
+                const valueStreamMap = response.data?.value_stream_map;
+                setTitle(title => valueStreamMap.title);
                 // Transform processTables into nodes
                 const tableNodes = Object.entries(processTables).map(([key, table], index) => ({
                     id: table.id || key,
@@ -68,7 +75,7 @@ function VSMapBoard(props) {
                     amount: table?.inventory.amount,
                     position: inventoryPositions[index],
                     data: {
-                        label: `${table?.inventory.amount} ${table?.inventory.unit}`
+                        label: `${table?.inventory.amount} ${getUnitDisplayName(valueStreamMap.unit.unit_type)}`
                     }
                 }));
 
@@ -135,7 +142,6 @@ function VSMapBoard(props) {
                     }
                 };
 
-                console.log(productionControlNode);
 
 
                 const edgesToSet = [];
@@ -159,7 +165,7 @@ function VSMapBoard(props) {
                     id: `prodControl:${supply.id}`,
                     source: `${supply.id}`,
                     target: `${productionControlNode.id}`,
-                    label: "Weekly Order"
+                    label: t("production-control-card.weekly-order")
                 }
 
                 edgesToSet.push(edgeFromProdControlToSupplier);
@@ -168,12 +174,12 @@ function VSMapBoard(props) {
                     id: `${customerNode.id}:prodControl`,
                     source: `${productionControlNode.id}`,
                     target: `${customerNode.id}`,
-                    label: "Monthly Order"
+                    label: t("production-control-card.monthly-order")
                 }
 
                 edgesToSet.push(edgeFromProdControlToCustomer);
 
-                
+
 
                 Object.entries(processTables).filter(([key, table], index) => {
                     if (table.position === 1) {
@@ -181,7 +187,7 @@ function VSMapBoard(props) {
                             id: `${supply.id}:${table.id}`,
                             source: `${table.id}`,
                             target: `${supply.id}`,
-                            label: `${supply.amount} ${supply.unit}`
+                            label: `${supply.amount} ${getUnitDisplayName(valueStreamMap.unit.unit_type)}`
                         }
                         edgesToSet.push(edgeToSupply);
                     }
@@ -190,7 +196,7 @@ function VSMapBoard(props) {
                             id: `${table.id}:${customer_output.id}`,
                             source: `${customer_output.id}`,
                             target: `${table.id}`,
-                            label: `${table.inventory?.amount} ${table?.inventory.unit}`
+                            label: `${table.inventory?.amount} ${getUnitDisplayName(valueStreamMap.unit.unit_type)}`
                         }
                         edgesToSet.push(edgeToCustomer);
                     }
@@ -206,6 +212,75 @@ function VSMapBoard(props) {
 
         fetchData();
     }, [id]);
+
+    const handleEditTitle = () => {
+        setTitleInput(title || '');
+        setTitleError('');
+        setIsEditingTitle(true);
+    };
+
+    const handleCancelTitleEdit = () => {
+        setTitleInput(title || '');
+        setTitleError('');
+        setIsEditingTitle(false);
+    };
+
+    const handleSaveTitle = async () => {
+        const newTitle = titleInput.trim();
+
+        // Validation
+        if (!newTitle) {
+            setTitleError('Title cannot be empty.');
+            return;
+        }
+
+        if (newTitle.length > 255) {
+            setTitleError('Title cannot exceed 255 characters.');
+            return;
+        }
+
+        setIsSavingTitle(true);
+        setTitleError('');
+
+        try {
+            const response = await Axios.put(
+                `http://localhost:8080/vsm/${id}`,
+                null,
+                {
+                    params: {
+                        title: newTitle
+                    }
+                }
+            );
+
+            /*
+             * The backend returns the complete VSM object.
+             */
+            const updatedVsm = response.data?.value_stream_map;
+
+            /*
+             * Update the React state with the object
+             * returned from the backend.
+             */
+            setVsMap(updatedVsm);
+            setTitle(updatedVsm.title);
+
+            /*
+             * Exit editing mode.
+             */
+            setIsEditingTitle(false);
+
+        } catch (err) {
+            console.error('Failed to update VSM title:', err);
+
+            setTitleError(
+                err.response?.data ||
+                'Failed to update title.'
+            );
+        } finally {
+            setIsSavingTitle(false);
+        }
+    };
 
     const getUnitDisplayName = (unitType) => {
         switch (unitType) {
@@ -253,9 +328,6 @@ function VSMapBoard(props) {
         [edges],
     );
 
-    const handleProcessTablesChange = (updatedTables) => {
-        setpTables(updatedTables);
-    }
 
     const nodeTypes = {
         table: TableNode,
@@ -265,6 +337,7 @@ function VSMapBoard(props) {
         truck: TruckNode,
         productionControl: ProductionControlNode
     }
+
 
     if (vsMap === undefined) {
         return (
@@ -279,7 +352,65 @@ function VSMapBoard(props) {
         return (
             <div className="vs-map">
                 <div className="flow-panel">
-                    <h2>{title}</h2>
+
+                    <div className="vsm-title-container">
+
+                        {!isEditingTitle ? (
+                            <>
+                                <h2>{title}</h2>
+
+                                <button
+                                    type="button"
+                                    onClick={handleEditTitle}
+                                    className="vsm-title-edit-button"
+                                >
+                                    {t("common.change")}
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <input
+                                    type="text"
+                                    value={titleInput}
+                                    onChange={(e) => {
+                                        setTitleInput(e.target.value);
+                                        setTitleError('');
+                                    }}
+                                    className="vsm-title-input"
+                                    disabled={isSavingTitle}
+                                    autoFocus
+                                />
+
+                                <button
+                                    type="button"
+                                    onClick={handleSaveTitle}
+                                    className="vsm-title-save-button"
+                                    disabled={isSavingTitle}
+                                >
+                                    {isSavingTitle
+                                        ? (t("common.saving") || "Saving...")
+                                        : (t("common.save") || "Save")}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={handleCancelTitleEdit}
+                                    className="vsm-title-cancel-button"
+                                    disabled={isSavingTitle}
+                                >
+                                    {t("common.cancel") || "Cancel"}
+                                </button>
+
+                                {titleError && (
+                                    <div className="vsm-title-error">
+                                        {titleError}
+                                    </div>
+                                )}
+                            </>
+                        )}
+
+                    </div>
+
 
                     <div className="flow-basics">
                         <ReactFlow

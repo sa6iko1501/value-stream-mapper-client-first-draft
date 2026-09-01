@@ -59,3 +59,56 @@
   background-color: #f5f5f5;
   color: var(--color-text-dark);
 }
+
+.vs-maps-table th:last-child,
+.vs-maps-table td:last-child {
+    width: 70px;
+    text-align: center;
+}
+
+.vs-map-delete-button {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #c0392b;
+    color: var(--color-text);
+
+    border: none;
+    border-radius: var(--border-radius);
+
+    cursor: pointer;
+    transition: var(--transition);
+
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.vs-map-delete-button:hover {
+    background-color: #a93226;
+}
+
+.vs-maps-add-button {
+    display: block;
+    margin: var(--spacing-lg) auto 0;
+    padding: var(--spacing-sm) var(--spacing-lg);
+
+    background-color: #11164b;
+    color: var(--color-text);
+
+    border: 1px white solid;
+    border-radius: var(--border-radius);
+
+    cursor: pointer;
+    transition: var(--transition);
+
+    font-size: 0.95rem;
+}
+
+.vs-maps-add-button:hover {
+    background-color: var(--color-hover);
+}

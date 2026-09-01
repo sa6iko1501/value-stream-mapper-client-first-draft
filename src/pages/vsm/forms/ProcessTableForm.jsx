@@ -376,7 +376,7 @@ function ProcessTableForm() {
               className="form-input"
             >
               <option value="" disabled>
-                Select row type
+                {t("edit-process-table.select-row-type")}
               </option>
 
               {rowTypes.map((rowType) => (
@@ -404,7 +404,7 @@ function ProcessTableForm() {
               className="form-input"
             >
               <option value="" disabled>
-                Select unit
+                {t("edit-process-table.select-unit")}
               </option>
 
               {getUnitsForRowType(row.row_type).map((unit) => (

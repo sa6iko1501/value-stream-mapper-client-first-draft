@@ -16,7 +16,7 @@
         "greeting": "This is the Dashboards page"
     },
     "vs-maps": {
-        "greeting": "This is the VS Maps page",
+        "greeting": "Value-Stream Maps",
         "title": "Name",
         "date": "Date"
     },
@@ -28,7 +28,9 @@
         "inventory-section": "Inventory",
         "amount": "Amount",
         "unit": "Unit",
-        "add-row": "Add row"
+        "add-row": "Add row",
+        "select-unit": "Select a unit",
+        "select-row-type": "Select row type"
     },
     "work-panel":{
         "title": "Work Panel",
@@ -66,11 +68,33 @@
         "supply": "Supply",
         "unit": "Unit"
     },
+    "supplier-card":{
+        "title": "Suppliers",
+        "unit": "Unit",
+        "daily-supply": "Daily Supply"
+    },
     "customer-form":{
         "title": "Edit customer",
         "title-add": "Add customer",
         "daily-req": "Daily requirement",
         "Unit": "Unit"
+    },
+    "customer-card":{
+        "title": "Customers",
+        "unit": "Unit",
+        "daily-req": "Daily Requirement"
+    },
+    "production-control-card":{
+        "title": "Production Control",
+        "weekly-order": "Weekly order",
+        "monthly-order": "Monthly order"
+    },
+    "vs-map-form":{
+        "create-new": "Create new Value-Stream map",
+        "basic-info": "Basic Information",
+        "enter-title": "Enter VSM Name",
+        "unit": "Unit",
+        "available-units": "Available units"
     },
     "common": {
         "loading": "Loading...",
@@ -78,6 +102,7 @@
         "cancel": "Cancel",
         "add-new": "Add new",
         "configure": "Configure",
-        "name": "Name"
+        "name": "Name",
+        "change": "Change"
     }
 }

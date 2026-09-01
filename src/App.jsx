@@ -10,6 +10,7 @@ import ProcessTablePositioningForm from './pages/vsm/forms/ProcessTablePositioni
 import SupplyForm from './pages/vsm/forms/SupplyForm.jsx';
 import SupplierForm from './pages/vsm/forms/SupplierForm.jsx';
 import CustomerForm from './pages/vsm/forms/CustomerForm.jsx';
+import VSMapsForm from './pages/vsm/forms/VSMapsForm.jsx';
 
 function App() {
   return <>
@@ -20,6 +21,7 @@ function App() {
           <Route path="/dashboards" element={<DashBoards />} />
           <Route path="/value-stream-maps" element={<VSMaps />} />
           <Route path="/vs-map/:id" element={<VSMapBoard />} />
+          <Route path="/vs-map/new" element={<VSMapsForm />} />
           <Route path="/edit-process-table/:id" element={<ProcessTableForm />} />
           <Route path="/process-table/new" element={<ProcessTableForm />} />
           <Route path="/process-table/positioning" element={<ProcessTablePositioningForm />} />
