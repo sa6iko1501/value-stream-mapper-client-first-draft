@@ -18,16 +18,26 @@
     stroke-linecap: round;
 }
 
-.total-lead-time-point {
-    fill: white;
+/* Ties a rung to the element it sits under. */
+.total-lead-time-connector {
     stroke: var(--color-primary);
-    stroke-width: 2;
+    stroke-width: 1;
+    stroke-dasharray: 3 4;
+    opacity: 0.35;
 }
 
-.total-lead-time-value {
-    font-size: 14px;
+/* Waiting time - on the upper rung, above the line. */
+.total-lead-time-wait-value {
+    font-size: 13px;
     font-weight: 600;
     fill: var(--color-text-dark);
+}
+
+/* Processing time - on the lower rung, below the line. */
+.total-lead-time-process-value {
+    font-size: 13px;
+    font-weight: 600;
+    fill: var(--color-primary);
 }
 
 .total-lead-time-label {

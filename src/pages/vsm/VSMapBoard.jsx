@@ -53,8 +53,8 @@ function VSMapBoard(props) {
                         title: table.title,
                         items: table.rows?.map(row => ({
                             name: row.row_name,
-                            value: row.value,
-                            unit: getUnitDisplayName(row.unit.unit_type)
+                            value: getFormattedValue(row),
+                            unit: getRowUnitDisplay(row)
                         }))
                     }
                 }));
@@ -389,6 +389,53 @@ function VSMapBoard(props) {
                 return "%";
             }
         }
+    }
+
+    const getRowUnitDisplay = (row) => {
+        console.log(row);
+        if(row.row_type === "TOTAL_AVAILABLE_TIME"){
+            return t("units.hour");
+        }
+
+        switch (row.unit.unit_type) {
+            case "KG": {
+                return t("units.kg");
+            }
+            case "PIECE": {
+                return t("units.piece");
+            }
+            case "PALLET": {
+                return t("units.pallet");
+            }
+            case "CART": {
+                return t("units.cart");
+            }
+            case "HOUR": {
+                return t("units.hour");
+            }
+            case "NUMBER": {
+                return "";
+            }
+            case "DAY": {
+                return t("units.day");
+            }
+            case "SECOND": {
+                return t("units.second");
+            }
+            case "PERCENT": {
+                return "%";
+            }
+        }
+    }
+
+    const getFormattedValue = (row) => {
+        if(row.row_type === "TOTAL_AVAILABLE_TIME"){
+            const hours = Math.floor(row.value / 60 / 60);
+            const minutes = Math.floor(row.value / 60) - (hours * 60);
+            const minutesString = minutes < 10 ? `0${minutes}` : minutes;
+           return `${hours}:${minutesString}`;
+        }
+        return row.value;
     }
 
     const onNodesChange = useCallback(
