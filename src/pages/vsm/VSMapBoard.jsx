@@ -11,6 +11,7 @@ import InventoryNode from './nodes/inventory/InventoryNode';
 import TruckNode from './nodes/TruckNode';
 import { useTranslation } from "react-i18next";
 import WorkPanel from './work-panel/WorkPanel';
+import TotalLeadTimeNode from './nodes/lead-time/TotalLeadTimeNode';
 import ProductionControlNode from './nodes/production-control/ProductionControlNode';
 import { v4 } from 'uuid';
 
@@ -34,12 +35,14 @@ function VSMapBoard(props) {
             try {
                 const response = await Axios.get(`http://localhost:8080/vsm/${id}`);
                 setVsMap(response.data?.value_stream_map);
+                console.log(response);
                 const processTables = response.data?.value_stream_map?.process_tables ?? [];
                 const supply = response.data?.value_stream_map?.supply;
                 const customer_output = response.data?.value_stream_map.customer_output;
                 const TABLE_NODE_DISTANCE = 400;
                 const TRUCK_NODE_Y = 400;
                 const valueStreamMap = response.data?.value_stream_map;
+                const totalLeadTime = response.data?.value_stream_map.total_lead_time;
                 setTitle(title => valueStreamMap.title);
                 // Transform processTables into nodes
                 const tableNodes = Object.entries(processTables).map(([key, table], index) => ({
@@ -55,6 +58,9 @@ function VSMapBoard(props) {
                         }))
                     }
                 }));
+
+
+
 
                 setpTables(processTables);
 
@@ -79,16 +85,50 @@ function VSMapBoard(props) {
                     }
                 }));
 
+                const lastTable = Object.values(processTables)
+                    .sort((a, b) => (b.position || 0) - (a.position || 0))[0];
+
+
+
+                const customerInventoryNode = {
+                    id: 'customer_inventory',
+                    type: 'inventory',
+                    ownTable: `${lastTable.id}`,
+                    nextInLine: null,
+                    unit: lastTable?.inventory.unit,
+                    amount: lastTable?.inventory.amount,
+                    position: { x: Object.entries(processTables).length * TABLE_NODE_DISTANCE + TABLE_NODE_DISTANCE / 3 + MAGIC_NUMBER, y: 450 },
+                    data: {
+                        label: `${lastTable?.inventory.amount} ${getUnitDisplayName(valueStreamMap.unit.unit_type)}`
+                    }
+                }
+
                 const inventoryNodesToSet = (allInventoryNodes || []).filter(
                     inventory => inventory && inventory.nextInLine !== null
                 );
+
+                const firstTable = Object.values(processTables)
+                    .sort((a, b) => (a.position || 0) - (b.position || 0))[0];
+
+                const firstTableNode = tableNodes.find(node => node.id === firstTable.id);
+                const supplyInventoryNode = {
+                    id: 'supply_inventory',
+                    type: 'inventory',
+                    unit: vsMap?.unit.name,
+                    amount: valueStreamMap?.supply.inventory_amount,
+                    position: { x: firstTableNode.position.x - MAGIC_NUMBER, y: 450 },
+                    data: {
+                        label: `${valueStreamMap?.supply.inventory_amount} ${getUnitDisplayName(valueStreamMap.unit.unit_type)}`
+                    }
+                }
+
 
 
 
                 const supplierNode = {
                     id: supply.id,
                     type: 'supply',
-                    position: { x: 0, y: 0 },
+                    position: { x: -150, y: 0 },
                     data: {
                         supply: supply
                     }
@@ -100,7 +140,7 @@ function VSMapBoard(props) {
                     id: `${supply.id}:truck`,
                     type: 'truck',
                     position: {
-                        x: TABLE_NODE_DISTANCE - MAGIC_NUMBER,
+                        x: TABLE_NODE_DISTANCE - MAGIC_NUMBER * 2,
                         y: TRUCK_NODE_Y
                     }
                 }
@@ -110,7 +150,7 @@ function VSMapBoard(props) {
                     id: `${tableNodes.at(tableNodes.length - 1).id}:truck`,
                     type: 'truck',
                     position: {
-                        x: tableNodes.at(tableNodes.length - 1).position.x + TABLE_NODE_DISTANCE - MAGIC_NUMBER,
+                        x: tableNodes.at(tableNodes.length - 1).position.x + TABLE_NODE_DISTANCE,
                         y: TRUCK_NODE_Y
                     }
                 }
@@ -119,7 +159,7 @@ function VSMapBoard(props) {
                 const customerNode = customer_output ? {
                     id: customer_output.id,
                     type: 'customer',
-                    position: { x: Object.entries(processTables).length * TABLE_NODE_DISTANCE + TABLE_NODE_DISTANCE, y: 0 },
+                    position: { x: Object.entries(processTables).length * TABLE_NODE_DISTANCE + TABLE_NODE_DISTANCE + MAGIC_NUMBER, y: 0 },
                     data: {
                         customer_output: customer_output
                     }
@@ -184,26 +224,63 @@ function VSMapBoard(props) {
                 Object.entries(processTables).filter(([key, table], index) => {
                     if (table.position === 1) {
                         const edgeToSupply = {
-                            id: `${supply.id}:${table.id}`,
-                            source: `${table.id}`,
+                            id: `${supplyInventoryNode.id}:${supplierNode.id}`,
+                            source: `${supplyInventoryNode.id}`,
                             target: `${supply.id}`,
-                            label: `${supply.amount} ${getUnitDisplayName(valueStreamMap.unit.unit_type)}`
+                        }
+
+                        const edgeToSupplierInventory = {
+                            id: `${table.id}:${supplyInventoryNode}`,
+                            source: `${table.id}`,
+                            target: `${supplyInventoryNode.id}`,
                         }
                         edgesToSet.push(edgeToSupply);
+                        edgesToSet.push(edgeToSupplierInventory);
                     }
                     if (table.position === Object.entries(processTables).length) {
-                        const edgeToCustomer = {
-                            id: `${table.id}:${customer_output.id}`,
-                            source: `${customer_output.id}`,
+                        const edgeToCustomerInventory = {
+                            id: `${table.id}:${customerInventoryNode.id}`,
+                            source: `${customerInventoryNode.id}`,
                             target: `${table.id}`,
-                            label: `${table.inventory?.amount} ${getUnitDisplayName(valueStreamMap.unit.unit_type)}`
                         }
+
+                        const edgeToCustomer = {
+                            id: `${customerInventoryNode.id}:${customerNode.id}`,
+                            source: `${customerNode.id}`,
+                            target: `${customerInventoryNode.id}`,
+                        }
+
+                        edgesToSet.push(edgeToCustomerInventory);
                         edgesToSet.push(edgeToCustomer);
                     }
                 });
 
+                const totalLeadTimeNode = {
+                    id: "total_lead_time",
+                    type: "totalLeadTime",
+                    position: {
+                        x: 0,
+                        y: 520
+                    },
+                    data: {
+                        totalLeadTime: valueStreamMap.total_lead_time,
+                        processTables: tableNodes,
+                        inventories: [
+                            supplyInventoryNode,
+                            ...inventoryNodesToSet,
+                            customerInventoryNode
+                        ],
+                        supplyInventory: supplyInventoryNode
+                    },
+                    selectable: false,
+                    draggable: false,
+                    connectable: false
+                };
 
-                setNodes(nodes => [...tableNodes, customerNode, ...inventoryNodesToSet, ...truckNodes, supplierNode, productionControlNode]);
+                console.log(totalLeadTimeNode);
+
+
+                setNodes(nodes => [...tableNodes, customerNode, ...inventoryNodesToSet, ...truckNodes, supplierNode, productionControlNode, customerInventoryNode, supplyInventoryNode, totalLeadTimeNode]);
                 setEdges(edges => [...edgesToSet]);
             } catch (err) {
                 console.error('Error:', err);
@@ -335,7 +412,8 @@ function VSMapBoard(props) {
         customer: CustomerNode,
         inventory: InventoryNode,
         truck: TruckNode,
-        productionControl: ProductionControlNode
+        productionControl: ProductionControlNode,
+        totalLeadTime: TotalLeadTimeNode
     }
 
 
@@ -432,7 +510,7 @@ function VSMapBoard(props) {
                         </ReactFlow>
                     </div>
                 </div>
-                <WorkPanel processTables={pTables} unitId={vsMap.unit.id} vsmId={vsMap.id} supply={vsMap.supply} customerOutput={vsMap.customer_output} />
+                <WorkPanel processTables={pTables} unitId={vsMap.unit.id} vsmId={vsMap.id} supply={vsMap.supply} customerOutput={vsMap.customer_output} shifts={vsMap.shifts} shiftLength={vsMap.length_of_shifts} breakTime={vsMap.breaktime} supplyInventory={vsMap.supply.inventory_amount} />
             </div>
         );
     }

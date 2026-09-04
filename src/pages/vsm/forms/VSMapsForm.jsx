@@ -87,12 +87,15 @@ function VSMapsForm() {
             supply: null,
             process_tables: null,
             unit: selectedUnit,
-            customer_output: null
+            customer_output: null,
+            shifts: 1,
+            length_of_shifts: 8,
+            breaktime: 30
         }
 
         
 
-        var response =  await Axios.post(
+        var response = await Axios.post(
           "http://localhost:8080/vsm",
           vsmDto
         );

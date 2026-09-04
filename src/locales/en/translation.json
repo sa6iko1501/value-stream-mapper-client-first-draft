@@ -38,7 +38,8 @@
         "modify-label": "Modify",
         "positioning-btn": "Positioning settings",
         "supply-title": "Supply",
-        "customer-section": "Clients"
+        "customer-section": "Clients",
+        "vsm-settings": "Value-Stream map settings"
     },
     "positioning":{
         "title": "Positioning"
@@ -82,7 +83,9 @@
     "customer-card":{
         "title": "Customers",
         "unit": "Unit",
-        "daily-req": "Daily Requirement"
+        "daily-req": "Daily Requirement",
+        "takt": "Takt",
+        "takt-per": "seconds per"
     },
     "production-control-card":{
         "title": "Production Control",

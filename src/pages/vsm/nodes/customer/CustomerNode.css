@@ -18,6 +18,30 @@
     background-color: var(--color-primary);
 }
 
+.customer-node-section {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.customer-node-takt-section {
+    display: flex;
+    margin-bottom: var(--spacing-xs);
+}
+
+.customer-node-label {
+    font-weight: 600;
+    color: var(--color-text-dark);
+    min-width: 100px;
+}
+
+.customer-node-value {
+    color: var(--color-text-dark);
+}
+
 .scustomer-node-cards {
     display: flex;
     flex-direction: column;

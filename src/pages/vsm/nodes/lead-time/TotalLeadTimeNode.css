@@ -1,0 +1,42 @@
+.total-lead-time-node {
+    position: relative;
+    pointer-events: none;
+    overflow: visible;
+}
+
+.total-lead-time-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: visible;
+}
+
+.total-lead-time-line {
+    stroke: var(--color-primary);
+    stroke-width: 3;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.total-lead-time-point {
+    fill: white;
+    stroke: var(--color-primary);
+    stroke-width: 2;
+}
+
+.total-lead-time-value {
+    font-size: 14px;
+    font-weight: 600;
+    fill: var(--color-text-dark);
+}
+
+.total-lead-time-label {
+    font-size: 15px;
+    font-weight: 700;
+    fill: var(--color-primary);
+}
+
+.total-lead-time-value-added {
+    font-size: 13px;
+    fill: var(--color-text-dark);
+}

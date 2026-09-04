@@ -38,7 +38,8 @@
         "modify-label": "Промени",
         "positioning-btn": "Настройка на позициите",
         "supply-title": "Доставка",
-        "customer-section": "Клиенти"
+        "customer-section": "Клиенти",
+        "vsm-settings": "Настройки на Value-Stream карта"
     },
     "positioning": {
         "title": "Позициониране"
@@ -81,7 +82,9 @@
     "customer-card": {
         "title": "Клиенти",
         "unit": "Единица",
-        "daily-req": "Дневна квота"
+        "daily-req": "Дневна квота",
+        "takt": "Такт",
+        "takt-per": "секунди за"
     },
     "production-control-card":{
         "title": "Контрол на продукцията",

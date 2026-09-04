@@ -138,6 +138,14 @@
   background-color: var(--color-hover);
 }
 
+.process-table-rows-section {
+  max-height: 250px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.5rem;
+  padding-bottom: 1rem;
+}
+
 .cancel-btn {
   padding: var(--spacing-sm) var(--spacing-lg);
   background-color: #666;

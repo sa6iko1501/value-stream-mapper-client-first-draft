@@ -50,7 +50,6 @@ function ProcessTableForm() {
   }, []);
 
 
-
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
@@ -162,6 +161,13 @@ function ProcessTableForm() {
       }
     });
 
+    if (!usedRowTypes.has("CYCLE_TIME")) {
+      errors.push("A row of type Cycle time is required.");
+    }
+
+    if (!usedRowTypes.has("WORKERS")) {
+      errors.push("A row of type Workers is required.");
+    }
 
 
     return errors;
@@ -216,16 +222,20 @@ function ProcessTableForm() {
       )
     };
 
+    const rowsToSubmit = rows.filter(
+      row => row.row_type !== "TOTAL_AVAILABLE_TIME"
+    );
+
     const processTableDto = isEditMode
       ? {
         ...existingTable,
         title,
-        rows,
+        rows: rowsToSubmit,
         inventory: updatedInventory
       }
       : {
         title,
-        rows,
+        rows: rowsToSubmit,
         inventory: updatedInventory,
         position: position,
         vsm_id: vsmId
@@ -290,6 +300,9 @@ function ProcessTableForm() {
       case "QUALITY": {
         return "Quality";
       }
+      case "TOTAL_AVAILABLE_TIME": {
+        return "Total available time"
+      }
       default: {
         return "Row Name";
       }
@@ -306,7 +319,6 @@ function ProcessTableForm() {
   const rowTypes = [
     "QUALITY",
     "WORKERS",
-    "SHIFTS",
     "PROCESS_TIME",
     "CYCLE_TIME",
     "UPTIME",
@@ -318,8 +330,8 @@ function ProcessTableForm() {
     WORKERS: ["Number"],
     SHIFTS: ["Number"],
     SHIFT_LENGTH: ["Hour"],
-    TOTAL_AVAILABLE_TIME: ["Second", "Hour"],
-    PROCESS_TIME: ["Second"],
+    TOTAL_AVAILABLE_TIME: ["Second"],
+    PROCESS_TIME: ["Second", "Hour"],
     UPTIME: ["Percent"],
     CYCLE_TIME: ["Second", "Hour"],
     CO: ["Second", "Hour"]
@@ -366,62 +378,73 @@ function ProcessTableForm() {
         </div>
 
         <h3>{t("edit-process-table.rows-section")}</h3>
-        {rows.map((row, index) => (
-          <div key={index} className="row-edit">
-            <select
-              value={row.row_type || ""}
-              onChange={(e) =>
-                handleRowTypeChange(index, e.target.value)
-              }
-              className="form-input"
-            >
-              <option value="" disabled>
-                {t("edit-process-table.select-row-type")}
-              </option>
+        <div className='process-table-rows-section'>
+          {rows.map((row, index) => {
+            if (row.row_type === "TOTAL_AVAILABLE_TIME") {
+              return null;
+            }
 
-              {rowTypes.map((rowType) => (
-                <option key={rowType} value={rowType}>
-                  {getRowName(rowType)}
-                </option>
-              ))}
-            </select>
-            <input
-              type="number"
-              value={row.value ?? ''}
-              onChange={(e) =>
-                handleRowChange(index, 'value', e.target.value)
-              }
-              min="0"
-              step={row.unit === "Number" ? "1" : "any"}
-              placeholder="Value"
-              className="form-input"
-            />
-            <select
-              value={row.unit?.id || ""}
-              onChange={(e) =>
-                handleRowChange(index, 'unit', e.target.value)
-              }
-              className="form-input"
-            >
-              <option value="" disabled>
-                {t("edit-process-table.select-unit")}
-              </option>
+            return (
+              <div key={row.id || index} className="row-edit">
+                <select
+                  value={row.row_type || ""}
+                  onChange={(e) =>
+                    handleRowTypeChange(index, e.target.value)
+                  }
+                  className="form-input"
+                >
+                  <option value="" disabled>
+                    {t("edit-process-table.select-row-type")}
+                  </option>
 
-              {getUnitsForRowType(row.row_type).map((unit) => (
-                <option key={unit.id} value={unit.id}>
-                  {unit.name}
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              onClick={() => removeRow(index)}
-              className="remove-btn"
-            >
-              ×
-            </button>
-          </div>
-        ))}
+                  {rowTypes.map((rowType) => (
+                    <option key={rowType} value={rowType}>
+                      {getRowName(rowType)}
+                    </option>
+                  ))}
+                </select>
+
+                <input
+                  type="number"
+                  value={row.value ?? ''}
+                  onChange={(e) =>
+                    handleRowChange(index, 'value', e.target.value)
+                  }
+                  min="0"
+                  step={row.unit === "Number" ? "1" : "any"}
+                  placeholder="Value"
+                  className="form-input"
+                />
+
+                <select
+                  value={row.unit?.id || ""}
+                  onChange={(e) =>
+                    handleRowChange(index, 'unit', e.target.value)
+                  }
+                  className="form-input"
+                >
+                  <option value="" disabled>
+                    {t("edit-process-table.select-unit")}
+                  </option>
+
+                  {getUnitsForRowType(row.row_type).map((unit) => (
+                    <option key={unit.id} value={unit.id}>
+                      {unit.name}
+                    </option>
+                  ))}
+                </select>
+
+                <button
+                  type="button"
+                  onClick={() => removeRow(index)}
+                  className="remove-btn"
+                >
+                  ×
+                </button>
+              </div>
+            );
+          })}
+        </div>
 
         <button type="button" onClick={addRow} className="add-btn">
           {`+ ${t("edit-process-table.add-row")}` || "Add row"}
